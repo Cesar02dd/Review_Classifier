@@ -26,6 +26,52 @@ print(hotel_reviews)
 print("\nFirst few rows of the dataset:")
 print(hotel_reviews.head())
 
+# Estatísticas resumidas
+print("\nSummary Statistics:")
+print(hotel_reviews.describe())
+
+# Selecionar as colunas com valor numerico
+colunas_numericas = hotel_reviews.select_dtypes(include=['number'])
+
+# Guardar as colunas selecionadas em um novo arquivo CSV
+#colunas_numericas.to_csv('colunas_numericas.csv', index=False)
+
+arr = colunas_numericas.iloc[:, 2:].to_numpy()
+
+print("\nSummary Statistics with NumPy:")
+
+#Mean
+print("\n*  Mean  *")
+print("Average_Score:",np.round(np.mean(arr[:, 0]),2))
+print("Review_Total_Negative_Word_Counts:",np.round(np.mean(arr[:, 1]),2))
+print("Total_Number_of_Reviews:",np.round(np.mean(arr[:, 2]),2))
+print("Review_Total_Positive_Word_Counts:",np.round(np.mean(arr[:, 3]),2))
+print("Total_Number_of_Reviews_Reviewer_Has_Given:",np.round(np.mean(arr[:, 4]),2))
+print("Reviewer_Score:",np.round(np.mean(arr[:, 5]),2))
+print("lat:",np.round(np.mean(arr[:, 6]),2))
+print("lng:",np.round(np.mean(arr[:, 7]),2))
+
+# Median
+print("\n*  Median  *")
+print("Average_Score:",np.round(np.median(arr[:, 0]),2))
+print("Review_Total_Negative_Word_Counts:",np.round(np.median(arr[:, 1]),2))
+print("Total_Number_of_Reviews:",np.round(np.median(arr[:, 2]),2))
+print("Review_Total_Positive_Word_Counts:",np.round(np.median(arr[:, 3]),2))
+print("Total_Number_of_Reviews_Reviewer_Has_Given:",np.round(np.median(arr[:, 4]),2))
+print("Reviewer_Score:",np.round(np.median(arr[:, 5]),2))
+print("lat:",np.round(np.median(arr[:, 6]),2))
+print("lng:",np.round(np.median(arr[:, 7]),2))
+
+# Standard Deviation
+print("\n*  Standard Deviation  *")
+print("Average_Score:",np.round(np.std(arr[:, 0]),2))
+print("Review_Total_Negative_Word_Counts:",np.round(np.std(arr[:, 1]),2))
+print("Total_Number_of_Reviews:",np.round(np.std(arr[:, 2]),2))
+print("Review_Total_Positive_Word_Counts:",np.round(np.std(arr[:, 3]),2))
+print("Total_Number_of_Reviews_Reviewer_Has_Given:",np.round(np.std(arr[:, 4]),2))
+print("Reviewer_Score:",np.round(np.std(arr[:, 5]),2))
+print("lat:",np.round(np.std(arr[:, 6]),2))
+print("lng:",np.round(np.std(arr[:, 7]),2))
 
 
 # Histograma entre o Num de Reviews e o Score
@@ -111,6 +157,32 @@ plt.axis('equal')
 plt.savefig('amount_data_per_country.png', dpi=300, bbox_inches='tight')
 plt.show()
 
+# Criar o heatmap
+plt.figure(figsize=(12, 6))
+sns.heatmap(hotel_reviews.pivot_table(index='Country_Name', columns='Reviewer_Score', values='Average_Score'), cmap='coolwarm')
+plt.xlabel('Reviewer_Score')
+plt.ylabel('Country_Name')
+plt.title('Heatmap da Pontuação Média do Hotel por País e Pontuação do Revisor')
+plt.show()
+
+# Criar o boxplot
+plt.figure(figsize=(12, 12))
+sns.boxplot(x='Country_Name', y='Reviewer_Score', data=hotel_reviews)
+plt.xlabel('Country_Name')
+plt.ylabel('Reviewer_Score')
+plt.title('Boxplot da Pontuação do Revisor por País')
+plt.xticks(rotation=45)
+plt.show()
+
+# Criar o violin plot
+plt.figure(figsize=(7, 5))
+sns.violinplot(x='Country_Name', y='Reviewer_Score', data=hotel_reviews)
+plt.xlabel('País')
+plt.ylabel('Pontuação do Revisor')
+plt.title('Distribuição da Pontuação do Revisor por País')
+plt.xticks(rotation=45)
+plt.show()
+
 '''
 # Quantidade Paises representados (Reviewer_Nationality)
 pessoas_por_pais = hotel_reviews['Reviewer_Nationality'].value_counts()
@@ -177,4 +249,119 @@ plt.grid(axis='y')
 plt.xticks(rotation=45, ha='right')
 plt.tight_layout()
 plt.show()
+
+
+'''
+colunas_selecionadas = hotel_reviews[['Average_Score','Review_Total_Negative_Word_Counts','Total_Number_of_Reviews','Review_Total_Positive_Word_Counts','Country_Name']]
+sns.pairplot(colunas_selecionadas, hue='Country_Name')
+plt.savefig('pairplot_all_features1.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+colunas_selecionadas2 = hotel_reviews[['Total_Number_of_Reviews_Reviewer_Has_Given','Reviewer_Score','lat','lng','Country_Name']]
+sns.pairplot(colunas_selecionadas2, hue='Country_Name')
+plt.savefig('pairplot_all_features2.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+
+colunas_selecionadas3 = hotel_reviews[['Average_Score','Review_Total_Negative_Word_Counts','Total_Number_of_Reviews','Review_Total_Positive_Word_Counts','Total_Number_of_Reviews_Reviewer_Has_Given','Reviewer_Score','lat','lng']]
+
+# Criar o heatmap
+plt.figure(figsize=(14, 14))
+sns.heatmap(colunas_selecionadas3.corr(), annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Heatmap de Correlação entre Features')
+plt.savefig('heatmap_all_features.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+
+colunas_selecionadas4 = hotel_reviews[['Average_Score','Review_Total_Negative_Word_Counts','Total_Number_of_Reviews','Review_Total_Positive_Word_Counts','Country_Name']]
+plt.figure(figsize=(14, 14))
+sns.violinplot(data=colunas_selecionadas, inner="points", palette="coolwarm")
+plt.title('Violin Plot')
+plt.savefig('Violin_Plot_all_features.png', dpi=300, bbox_inches='tight')
+plt.show()
+'''
+
+#%%
+'''
+import pandas as pd
+import matplotlib.pyplot as plt
+from collections import Counter
+from wordcloud import WordCloud
+
+
+hotel_reviews = pd.read_csv("hotel_reviews.csv")
+
+negative_reviews_text = ' '.join(hotel_reviews['Negative_Review'])
+
+words = negative_reviews_text.split()
+
+# Criar dicionário de palavras negativas
+negative_words = [
+    "awful", "bad", "terrible", "dreadful", "horrible", "disappointed",
+    "unhappy", "frustrated", "angry", "irritated", "sad", "disgusting",
+    "dirty", "unacceptable", "uncomfortable", "noisy", "crowded", "broken",
+    "old", "outdated", "inefficient", "rude", "unhelpful", "disrespectful",
+    "expensive", "overpriced", "disappointed", "waste of money", "unfair",
+    "deceptive", "dishonest", "misleading", "poor", "inadequate", "insufficient",
+    "painful", "unhealthy", "dangerous", "unsafe", "isolated", "remote",
+    "boring", "unexciting", "disappointing"
+]
+
+# Filtrar palavras negativas
+filtered_words = [word for word in words if word in negative_words]
+
+word_counts = Counter(filtered_words)
+
+most_common_word, most_common_count = word_counts.most_common(1)[0]
+
+plt.figure(figsize=(10, 6))
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(word_counts)
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.title(f'Most Common Negative Word: "{most_common_word}" (Count: {most_common_count})')
+plt.axis('off')
+plt.show()
+'''
+#%%
+'''
+import pandas as pd
+import matplotlib.pyplot as plt
+from collections import Counter
+from wordcloud import WordCloud
+
+
+hotel_reviews = pd.read_csv("hotel_reviews.csv")
+
+negative_reviews_text = ' '.join(hotel_reviews['Positive_Review'])
+
+words = negative_reviews_text.split()
+
+# Criar dicionário de palavras negativas
+positive_words = [
+    "wonderful", "good", "fantastic", "pleasant", "splendid",
+    "delighted", "joyful", "content", "calm", "serene",
+    "cheerful", "appealing", "clean", "acceptable", "peaceful",
+    "spacious", "functional", "new", "modern", "efficient",
+    "polite", "supportive", "respectful", "affordable", "reasonable",
+    "satisfied", "worthwhile", "just", "honest", "truthful", "accurate",
+    "rich", "ample", "sufficient", "pleasurable", "wholesome", "secure",
+    "connected", "thriving", "engrossing", "stimulating", "exciting",
+    "fulfilling"
+]
+
+
+# Filtrar palavras negativas
+filtered_words = [word for word in words if word in positive_words]
+
+word_counts = Counter(filtered_words)
+
+most_common_word, most_common_count = word_counts.most_common(1)[0]
+
+plt.figure(figsize=(10, 6))
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(word_counts)
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.title(f'Most Common Negative Word: "{most_common_word}" (Count: {most_common_count})')
+plt.axis('off')
+plt.show()
+'''
+
 
