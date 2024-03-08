@@ -12,7 +12,7 @@ class FeatureAnalysis:
         self.data_loader = data_loader
 
         self._data = self.data_loader.data.select_dtypes(include=['number'])
-        self._targets = self.data_loader.labels['Reviewer_Score_bin_encoded']
+        self._targets = self.data_loader.labels
 
     def perform_feature_analysis(self):
         # Compute and plot PCA projection
@@ -114,7 +114,7 @@ class FeatureAnalysis:
         plt.grid(True)
         plt.show()
 
-    def relevant_feature_identification(self, num_features=10):
+    def relevant_feature_identification(self, num_features=7):
         """
         Perform feature relevant feature identification using mutual information between each feature and the target
         variable. Mutual information measures the amount of information obtained about one random variable through
@@ -133,11 +133,13 @@ class FeatureAnalysis:
             if self.data_loader.data_train is None or self.data_loader.labels_train is None:
                 raise ValueError("Training data or labels have not been loaded yet.")
 
+            data = self.data_loader.data.select_dtypes(include=['number'])
+
             # Perform feature selection using mutual information
-            mutual_info = mutual_info_classif(self.data_loader.data_train, self.data_loader.labels_train)
+            mutual_info = mutual_info_classif(data, self.data_loader.labels)
 
             selected_features_indices = np.argsort(mutual_info)[::-1][:num_features]
-            selected_features = self.data_loader.data_train.columns[selected_features_indices]
+            selected_features = data.columns[selected_features_indices]
 
             print(f"{num_features} relevant features identified.")
             print(selected_features.tolist())

@@ -70,13 +70,14 @@ if __name__ == "__main__":
     feature_analysis = FeatureAnalysisAndGenerator(data_loader)
 
     # Perform Analysis
-    #feature_analysis.perform_feature_analysis() !!!!!!!!
+    feature_analysis.perform_feature_analysis()
 
     # Generate new features
     feature_analysis.generate_features()
 
     # Perform relevant feature identification
-    relevant_features = feature_analysis.relevant_feature_identification(len(data_loader.data_train.columns))
+    columns = data_loader.data.select_dtypes(include=['number'])
+    relevant_features = feature_analysis.relevant_feature_identification(len(columns))
 
     # Modified data sample visualization
     data_visualization.plot_boxplot()
@@ -95,5 +96,5 @@ if __name__ == "__main__":
 
     hypothesis_tester = HypothesisTesting(data_loader)
     hypothesis_tester.anova_results()
-    hypothesis_tester.kruskal_wallis_results()
+    # hypothesis_tester.kruskal_wallis_results()
     hypothesis_tester.t_test_results()

@@ -53,7 +53,11 @@ class DataManipulator(DataLoader):
                 self.labels_test['Reviewer_Score_bin'])
 
             # Display the dataset after binning
-            print('Dataset after binning score reviewer: \n', self.labels['Reviewer_Score', 'Reviewer_Score_bin', 'Reviewer_Score_bin_encoded'])
+            print('Dataset after binning score reviewer: \n', self.labels[['Reviewer_Score', 'Reviewer_Score_bin', 'Reviewer_Score_bin_encoded']])
+
+            self.labels = self.labels['Reviewer_Score_bin_encoded']
+            self.labels_train = self.labels_train['Reviewer_Score_bin_encoded']
+            self.labels_test = self.labels_test['Reviewer_Score_bin_encoded']
 
         except Exception as e:
             print("Error:", e)

@@ -18,6 +18,7 @@ class DataVisualization:
         Initializes the DataVisualization class with a DataLoader object.
         """
         self.data_loader = data_loader
+        self._data = self.data_loader.data.select_dtypes(include=['number'])
 
     def perform_visualization(self):
         """
@@ -36,7 +37,7 @@ class DataVisualization:
         """
         Plots pairplot for all features.
         """
-        sns.pairplot(self.data_loader.data, diag_kind='kde')
+        sns.pairplot(self._data, diag_kind='kde')
         plt.title("Pairplot of Features")
         plt.show()
 
@@ -48,11 +49,11 @@ class DataVisualization:
         fig, ax = plt.subplots(figsize=(15, 8))
 
         # Plot boxplots for each feature
-        sns.boxplot(data=self.data_loader.data, ax=ax)
+        sns.boxplot(data=self._data, ax=ax)
         ax.set_title("Boxplot of all Features")
         ax.set_xlabel("Feature")
         ax.set_ylabel("Value")
-        ax.set_xticks(range(len(self.data_loader.data.columns)))
+        ax.set_xticks(range(len(self._data.columns)))
         ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
 
         plt.tight_layout()
@@ -64,16 +65,16 @@ class DataVisualization:
         """
 
         # Create a single figure and axis for all boxplots
-        fig, axes = plt.subplots(len(self.data_loader.data.columns), 1, figsize=(10, 8), sharex=True)
+        fig, axes = plt.subplots(len(self._data.columns), 1, figsize=(10, 8), sharex=True)
 
         # Generate a gradient of darker colors for the plots
-        num_plots = len(self.data_loader.data.columns)
+        num_plots = len(self._data.columns)
         cmap = plt.get_cmap('Blues')
         colors = [cmap(1 - i / (num_plots + 1)) for i in range(1, num_plots + 1)]
 
         # Plot overlapping densities for each numerical feature
-        for i, (feature, color) in enumerate(zip(self.data_loader.data.columns, colors)):
-            sns.kdeplot(data=self.data_loader.data[feature], ax=axes[i], color=color, fill=True, linewidth=2)
+        for i, (feature, color) in enumerate(zip(self._data.columns, colors)):
+            sns.kdeplot(data=self._data[feature], ax=axes[i], color=color, fill=True, linewidth=2)
             axes[i].set_ylabel(feature, rotation=0, labelpad=40)  # Rotate y-axis label
             axes[i].yaxis.set_label_coords(-0.1, 0.5)  # Adjust label position
             axes[i].spines['top'].set_visible(False)

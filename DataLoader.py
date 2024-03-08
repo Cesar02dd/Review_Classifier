@@ -33,7 +33,8 @@ class DataLoader:
 
             # Split the data into features and labels
             self.data = df.drop(columns=['Reviewer_Score'])
-            self.labels = df['Reviewer_Score']
+            #self.target = df[['Reviewer_Score']]
+            self.labels = df[['Reviewer_Score']].copy()
 
             # Split the data into training and testing sets
             X_train, X_test, y_train, y_test = train_test_split(self.data, self.labels, test_size=self.test_size,

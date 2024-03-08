@@ -26,7 +26,6 @@ class FeatureAnalysisAndGenerator(FeatureAnalysis):
                                                                      'Muitas_Avaliações', 'Muitissimas_Avaliações'])
 
         # Display the dataset after binning
-        print('Dataset after binning score reviewer: \n', self.data_loader.data[['Reviewer_Score', 'Reviewer_Score_bin']])
         print('Dataset after binning expertise level: \n',
               self.data_loader.data[['Total_Number_of_Reviews_Reviewer_Has_Given', 'Reviewer_Expertise_Level_bin']].head(20))
         print('Dataset after binning expertise level: \n',
@@ -43,8 +42,8 @@ class FeatureAnalysisAndGenerator(FeatureAnalysis):
         self.data_loader.data['Ratio_WordCount_Between_Positive_Negative_Reviews'] = \
             (self.data_loader.data['Review_Total_Positive_Word_Counts'] / self.data_loader.data['Review_Total_Negative_Word_Counts'])
 
-        self.data_loader.data['Deviation_Between_AverageScore_ReviewerScore'] = (
-                self.data_loader.data['Reviewer_Score'] - self.data_loader.data['Average_Score'])
+        #self.data_loader.data['Deviation_Between_AverageScore_ReviewerScore'] = (
+        #        self.data_loader.data['Reviewer_Score'] - self.data_loader.data['Average_Score'])
 
         self.data_loader.data['Ratio_Between_AverageScore_TotalReviews'] = \
             (self.data_loader.data['Total_Number_of_Reviews'] / self.data_loader.data['Average_Score'])
@@ -74,15 +73,15 @@ class FeatureAnalysisAndGenerator(FeatureAnalysis):
         self.data_loader.data['Reviewer_Has_Given_Negative_Review'] = self.data_loader.data['Review_Total_Negative_Word_Counts'].apply(
             lambda review: 0 if review == 0 else 1)
 
-        self.data_loader.data['Log_Reviewer_Score'] = np.log(self.data_loader.data['Reviewer_Score'])
+        #self.data_loader.data['Log_Reviewer_Score'] = np.log(self.data_loader.data['Reviewer_Score'])
 
         self.data_loader.data['Square_Ratio_WordCount'] = np.power(
             self.data_loader.data['Ratio_WordCount_Between_Positive_Negative_Reviews'], 2)
 
-        self.data_loader.data['Weighted_Average_Reviewer_Score'] = ((self.data_loader.data['Reviewer_Score'] *
-                                                             self.data_loader.data[
-                                                                 'Total_Number_of_Reviews_Reviewer_Has_Given']) +
-                                                            self.data_loader.data['Log_Reviewer_Score'])
+        #self.data_loader.data['Weighted_Average_Reviewer_Score'] = ((self.data_loader.data['Reviewer_Score'] *
+        #                                                    self.data_loader.data[
+        #                                                        'Total_Number_of_Reviews_Reviewer_Has_Given']) +
+        #                                                   self.data_loader.data['Log_Reviewer_Score'])
 
         # Display the dataset after creating interactions
         print('Dataset after creating interactions: \n', self.data_loader.data.head(20))
