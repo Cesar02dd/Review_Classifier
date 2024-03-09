@@ -6,7 +6,7 @@ from scipy.stats import kruskal, f_oneway, ttest_ind
 class HypothesisTesting:
     def __init__(self, data_loader):
         self.data_loader = data_loader
-        self._data = self.data_loader.data.select_dtypes(include=['number'])
+        self._data = self.data_loader.data_train.select_dtypes(include=['number'])
 
     def _perform_anova_test(self, feature):
         """
@@ -20,8 +20,8 @@ class HypothesisTesting:
             significant (bool): True if the null hypothesis is rejected, indicating a significant relationship.
         """
         # Split data based on the target variable
-        data_groups = [self._data.loc[self.data_loader.labels == label, feature] for label in
-                       self.data_loader.labels.unique()]
+        data_groups = [self._data.loc[self.data_loader.labels_train == label, feature] for label in
+                       self.data_loader.labels_train.unique()]
 
         # Perform ANOVA test
         f_statistic, p_value = f_oneway(*data_groups)
@@ -43,8 +43,8 @@ class HypothesisTesting:
             significant (bool): True if the null hypothesis is rejected, indicating a significant relationship.
         """
         # Split data based on the target variable
-        data_groups = [self._data.loc[self.data_loader.labels == label, feature] for label in
-                       self.data_loader.labels.unique()]
+        data_groups = [self._data.loc[self.data_loader.labels_train == label, feature] for label in
+                       self.data_loader.labels_train.unique()]
 
         # Perform Kruskal-Wallis test
         h_statistic, p_value = kruskal(*data_groups)
@@ -82,9 +82,9 @@ class HypothesisTesting:
         print("\n\nT-test results:")
         for feature in self._data.columns:
             print(f"Feature: {feature}")
-            for class1, class2 in itertools.combinations(self.data_loader.labels.unique(), 2):
+            for class1, class2 in itertools.combinations(self.data_loader.labels_train.unique(), 2):
                 print(f"Class 1: {class1},  Class 2: {class2}")
-                data_class1 = self._data.loc[self.data_loader.labels == class1, feature]
-                data_class2 = self._data.loc[self.data_loader.labels == class2, feature]
+                data_class1 = self._data.loc[self.data_loader.labels_train == class1, feature]
+                data_class2 = self._data.loc[self.data_loader.labels_train == class2, feature]
                 t_statistic, p_value = ttest_ind(data_class1, data_class2)
                 print('Significant' if p_value < 0.05 else 'Not Significant')

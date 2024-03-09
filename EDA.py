@@ -8,8 +8,8 @@ from sklearn.inspection import permutation_importance
 class EDA:
     def __init__(self, data_loader):
         self.data_loader = data_loader
-        self._data = self.data_loader.data.select_dtypes(include=['number'])
-        self._labels = self.data_loader.labels
+        self._data = self.data_loader.data_train.select_dtypes(include=['number'])
+        self._labels = self.data_loader.labels_train
 
     def perform_eda(self):
         print("Exploratory Data Analysis (EDA) Report:")
@@ -17,11 +17,9 @@ class EDA:
 
         # Basic information of dataset
         print("\nBasic Information about the dataset:")
-        print(self.data_loader.data.info())
+        print(self.data_loader.data_train.info())
 
         # Summary statistics
-        print("\nSummary Statistics for normal data:")
-        print(self.data_loader.data.describe())
         print("\nSummary Statistics for train data:")
         print(self.data_loader.data_train.describe())
         print("\nSummary Statistics for test data:")

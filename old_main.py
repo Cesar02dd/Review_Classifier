@@ -614,7 +614,7 @@ feature_to_bin3 = 'Total_Number_of_Reviews'
 bins_reviewer_score = [0, 4, 7,
                        10]  # Perguntar ao prof se é melhor ter mais bins: 0-4 Mau, 4-6 Neutral, 6-8 Bom, 8-10 Muito Bom
 bins_expertise_level = [0, 5, 10, 15, 20, float('inf')]
-bins_total_reviews = [0, 2500, 5000, 7500, float('inf')]
+bins_total_reviews = [0, 2500, 5000, 7500, float('inf')]\
 
 # Perform binning using pandas
 hotel_reviews['Reviewer_Score_bin'] = pd.cut(hotel_reviews[feature_to_bin], bins=bins_reviewer_score,

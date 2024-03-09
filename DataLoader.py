@@ -2,6 +2,7 @@ import warnings
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 
 
 class DataLoader:
@@ -36,6 +37,8 @@ class DataLoader:
             #self.target = df[['Reviewer_Score']]
             self.labels = df[['Reviewer_Score']].copy()
 
+            self._encode_score()
+
             # Split the data into training and testing sets
             X_train, X_test, y_train, y_test = train_test_split(self.data, self.labels, test_size=self.test_size,
                                                                 random_state=self.state)
@@ -51,4 +54,65 @@ class DataLoader:
         except FileNotFoundError as e:
             print("File not found. Please check the file path.")
 
+    def _encode_score(self):
+        try:
+            # Select Reviewer Score column
+            feature_to_bin = 'Reviewer_Score'
 
+            # Define the number of bins (or bin edges)
+            bins_reviewer_score = [0, 4, 7, 10]
+
+            # Perform binning using pandas
+            self.labels['Reviewer_Score_bin'] = pd.cut(self.labels[feature_to_bin], bins=bins_reviewer_score,
+                                                        labels=['Mau', 'Neutral', 'Bom'])
+
+            # Create an instance of LabelEncoder
+            label_encoder = LabelEncoder()
+
+            # Encode the 'reviewer_score_bin' column
+            self.labels['Reviewer_Score_bin_encoded'] = label_encoder.fit_transform(
+                self.labels['Reviewer_Score_bin'])
+
+            # Display the dataset after binning
+            print('Dataset after binning score reviewer: \n', self.labels[['Reviewer_Score', 'Reviewer_Score_bin', 'Reviewer_Score_bin_encoded']])
+
+            self.labels = self.labels['Reviewer_Score_bin_encoded']
+
+            # Choose the  column for binning
+            feature_to_bin2 = 'Total_Number_of_Reviews_Reviewer_Has_Given'
+            feature_to_bin3 = 'Total_Number_of_Reviews'
+
+            # Define the number of bins (or bin edges)
+            bins_expertise_level = [0, 5, 10, 15, 20, float('inf')]
+            bins_total_reviews = [0, 2500, 5000, 7500, float('inf')]
+
+            # Perform binning using pandas
+
+            reviewer_expertise_level_bin = pd.cut(self.data[feature_to_bin2],
+                                                  bins=bins_expertise_level,
+                                                  labels=['Nenhum', 'Baixo', 'Medio', 'Alto', 'Experto'])
+            review_count_per_hotel_bin = pd.cut(self.data[feature_to_bin3], bins=bins_total_reviews,
+                                                labels=['Poucas_Avaliações', 'Algumas_Avaliações',
+                                                        'Muitas_Avaliações', 'Muitissimas_Avaliações'])
+
+            label_encoder = LabelEncoder()
+            label_encoder2 = LabelEncoder()
+
+            # Encode the 'reviewer_score_bin' column
+            self.data['Reviewer_Expertise_Level_Encoded'] = label_encoder.fit_transform(
+                reviewer_expertise_level_bin)
+
+            self.data['Review_Count_Per_Hotel_Encoded'] = label_encoder2.fit_transform(
+                review_count_per_hotel_bin)
+
+            # Display the dataset after binning
+            print('Dataset after binning expertise level: \n',
+                  self.data[
+                      ['Total_Number_of_Reviews_Reviewer_Has_Given', 'Reviewer_Expertise_Level_Encoded']].head(20))
+            print('Dataset after binning expertise level: \n',
+                  self.data[['Total_Number_of_Reviews', 'Review_Count_Per_Hotel_Encoded']])
+
+            self.data = self.data.drop(columns=['Total_Number_of_Reviews_Reviewer_Has_Given', 'Total_Number_of_Reviews'])
+
+        except Exception as e:
+            print("Error:", e)

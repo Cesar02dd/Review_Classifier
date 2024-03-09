@@ -10,7 +10,6 @@ class DataManipulator(DataLoader):
 
         # Manipulate data
         self.drop_columns()
-        self._encode_score()
 
     def drop_columns(self):
         try:
@@ -21,43 +20,4 @@ class DataManipulator(DataLoader):
         except Exception as e:
             print("Error:", e)
 
-    def _encode_score(self):
-        try:
-            # Select Reviewer Score column
-            feature_to_bin = 'Reviewer_Score'
 
-            # Define the number of bins (or bin edges)
-            bins_reviewer_score = [0, 4, 7, 10]
-
-            # Perform binning using pandas
-            self.labels['Reviewer_Score_bin'] = pd.cut(self.labels[feature_to_bin], bins=bins_reviewer_score,
-                                                       labels=['Mau', 'Neutral', 'Bom'])
-            self.labels_train['Reviewer_Score_bin'] = pd.cut(self.labels_train[feature_to_bin],
-                                                             bins=bins_reviewer_score,
-                                                             labels=['Mau', 'Neutral', 'Bom'])
-            self.labels_test['Reviewer_Score_bin'] = pd.cut(self.labels_test[feature_to_bin],
-                                                            bins=bins_reviewer_score,
-                                                            labels=['Mau', 'Neutral', 'Bom'])
-
-            # Create an instance of LabelEncoder
-            label_encoder = LabelEncoder()
-
-            # Encode the 'reviewer_score_bin' column
-            self.labels['Reviewer_Score_bin_encoded'] = label_encoder.fit_transform(
-                self.labels['Reviewer_Score_bin'])
-
-            self.labels_train['Reviewer_Score_bin_encoded'] = label_encoder.fit_transform(
-                self.labels_train['Reviewer_Score_bin'])
-
-            self.labels_test['Reviewer_Score_bin_encoded'] = label_encoder.fit_transform(
-                self.labels_test['Reviewer_Score_bin'])
-
-            # Display the dataset after binning
-            print('Dataset after binning score reviewer: \n', self.labels[['Reviewer_Score', 'Reviewer_Score_bin', 'Reviewer_Score_bin_encoded']])
-
-            self.labels = self.labels['Reviewer_Score_bin_encoded']
-            self.labels_train = self.labels_train['Reviewer_Score_bin_encoded']
-            self.labels_test = self.labels_test['Reviewer_Score_bin_encoded']
-
-        except Exception as e:
-            print("Error:", e)

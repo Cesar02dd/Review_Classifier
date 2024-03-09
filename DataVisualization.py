@@ -18,7 +18,7 @@ class DataVisualization:
         Initializes the DataVisualization class with a DataLoader object.
         """
         self.data_loader = data_loader
-        self._data = self.data_loader.data.select_dtypes(include=['number'])
+        self._data = self.data_loader.data_train.select_dtypes(include=['number'])
 
     def perform_visualization(self):
         """

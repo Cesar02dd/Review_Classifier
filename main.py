@@ -35,8 +35,6 @@ if __name__ == "__main__":
     data_cleaner.remove_outliers()
 
     print("\n\nAfter data preprocessing")
-    print("Normal data shape:", data_loader.data.shape)
-    print("Normal labels shape:", data_loader.labels.shape)
     print("Training data shape:", data_loader.data_train.shape)
     print("Training labels shape:", data_loader.labels_train.shape)
     print("Testing data shape:", data_loader.data_test.shape)
@@ -50,8 +48,6 @@ if __name__ == "__main__":
     with open('data_loader.pkl', 'rb') as f:
         data_loader_loaded = pickle.load(f)
     print("\n\nDeserialized data")
-    print("Training data shape:", data_loader_loaded.data.shape)
-    print("Training labels shape:", data_loader_loaded.labels.shape)
     print("Training data shape:", data_loader_loaded.data_train.shape)
     print("Training labels shape:", data_loader_loaded.labels_train.shape)
     print("Testing data shape:", data_loader_loaded.data_test.shape)

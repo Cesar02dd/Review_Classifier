@@ -1,5 +1,7 @@
-#from typing import re
-
+from nltk.corpus import stopwords
+from wordcloud import WordCloud
+from collections import Counter
+import re
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -294,43 +296,43 @@ class PreVisualization:
         all_reviews = ' '.join(reviews_column)
 
         # Tokeniza o texto em palavras, ignorando numeros e Case Sensitive
-        #words = re.findall(r'\b[A-Za-z]+\b', all_reviews.lower())
+        words = re.findall(r'\b[A-Za-z]+\b', all_reviews.lower())
 
         # Filtra palavras comuns usando NLTK
-        #english_stopwords = set(stopwords.words('english'))
-        #filtered_words = [word for word in words if word not in english_stopwords]
+        english_stopwords = set(stopwords.words('english'))
+        filtered_words = [word for word in words if word not in english_stopwords]
 
         # Conta a frequência de cada palavra
-        #word_counts = Counter(filtered_words)
+        word_counts = Counter(filtered_words)
 
         # Obtem as 100 palavras mais comuns
-        #top_100_words = word_counts.most_common(100)
+        top_100_words = word_counts.most_common(100)
 
         # Converte a lista de tuplos num dicionario
-        #word_freq_dict = dict(top_100_words)
+        word_freq_dict = dict(top_100_words)
 
         # Cria um DataFrame para mostrar todas as palavras e a sua frequência
-        #df = pd.DataFrame(top_100_words, columns=['Palavra', 'Nº de Repetições'])
+        df = pd.DataFrame(top_100_words, columns=['Palavra', 'Nº de Repetições'])
 
-        #return word_freq_dict, df
+        return word_freq_dict, df
 
     def show_wordcloud(self, word_freq, title=None):
-        #wordcloud = WordCloud(
+        wordcloud = WordCloud(
             background_color='white',
             max_words=200,
             max_font_size=40,
             scale=3,
             random_state=42
-        #)
+        )
 
-        #wordcloud.generate_from_frequencies(word_freq)
+        wordcloud.generate_from_frequencies(word_freq)
 
-        #plt.figure(figsize=(10, 6))
-        #plt.imshow(wordcloud, interpolation="bilinear")
-        #plt.axis('off')
-        #if title:
-        #    plt.title(title, fontsize=20)
-        #plt.show()
+        plt.figure(figsize=(10, 6))
+        plt.imshow(wordcloud, interpolation="bilinear")
+        plt.axis('off')
+        if title:
+            plt.title(title, fontsize=20)
+        plt.show()
 
     def create_nice_wordcloud(self):
 

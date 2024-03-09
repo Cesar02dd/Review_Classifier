@@ -11,14 +11,14 @@ class DataPreprocessing:
     def _normalize_features(self):
         try:
             # Check if data_train and data_test are not None
-            if self.data_loader.data_train is None or self.data_loader.data_test is None or self.data_loader.data is None:
+            if self.data_loader.data_train is None or self.data_loader.data_test is None:
                 raise ValueError("Data has not been loaded yet.")
             # Check if labels_train and labels_test are not None
-            if self.data_loader.labels_train is None or self.data_loader.labels_test is None or self.data_loader.labels is None:
+            if self.data_loader.labels_train is None or self.data_loader.labels_test is None:
                 raise ValueError("Labels have not been loaded yet.")
 
             # Select numeric columns
-            numerical_columns = self.data_loader.data.select_dtypes(include=['number'])
+            numerical_columns = self.data_loader.data_train.select_dtypes(include=['number'])
 
             print("Numeric columns: " + numerical_columns.columns)
 
@@ -27,8 +27,8 @@ class DataPreprocessing:
 
             # Normalize real numeric features using StandardScaler
             scaler = StandardScaler()
-            self.data_loader.data[numerical_features] = scaler.fit_transform(
-                self.data_loader.data[numerical_features])
+            #self.data_loader.data[numerical_features] = scaler.fit_transform(
+                #self.data_loader.data[numerical_features])
             self.data_loader.data_train[numerical_features] = scaler.fit_transform(
                 self.data_loader.data_train[numerical_features])
             self.data_loader.data_test[numerical_features] = scaler.transform(
