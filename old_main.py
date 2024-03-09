@@ -245,18 +245,13 @@ plt.tight_layout()
 plt.show()
 
 
-'''
-colunas_selecionadas = hotel_reviews[['Average_Score','Review_Total_Negative_Word_Counts','Total_Number_of_Reviews','Review_Total_Positive_Word_Counts','Country_Name']]
+colunas_selecionadas = hotel_reviews[['Average_Score','Review_Total_Negative_Word_Counts','Total_Number_of_Reviews','Review_Total_Positive_Word_Counts','Total_Number_of_Reviews_Reviewer_Has_Given','Reviewer_Score','lat','lng','Country_Name']]
 sns.pairplot(colunas_selecionadas, hue='Country_Name')
 plt.savefig('pairplot_all_features1.png', dpi=300, bbox_inches='tight')
 plt.show()
 
-colunas_selecionadas2 = hotel_reviews[['Total_Number_of_Reviews_Reviewer_Has_Given','Reviewer_Score','lat','lng','Country_Name']]
-sns.pairplot(colunas_selecionadas2, hue='Country_Name')
-plt.savefig('pairplot_all_features2.png', dpi=300, bbox_inches='tight')
-plt.show()
 
-
+'''
 colunas_selecionadas3 = hotel_reviews[['Average_Score','Review_Total_Negative_Word_Counts','Total_Number_of_Reviews','Review_Total_Positive_Word_Counts','Total_Number_of_Reviews_Reviewer_Has_Given','Reviewer_Score','lat','lng']]
 
 # Criar o heatmap
