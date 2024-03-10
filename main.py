@@ -74,6 +74,7 @@ if __name__ == "__main__":
     # Perform relevant feature identification
     columns = data_loader.data.select_dtypes(include=['number'])
     relevant_features = feature_analysis.relevant_feature_identification(len(columns))
+    relevant_features_mrmr = feature_analysis.select_features_mrmr(len(columns))
 
     # Modified data sample visualization
     data_visualization.plot_boxplot()

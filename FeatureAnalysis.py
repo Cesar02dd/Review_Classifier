@@ -1,6 +1,9 @@
 import numpy as np
 import umap
-from matplotlib import pyplot as plt
+from mrmr import mrmr_classif
+from matplotlib import pyplot as plt, cm
+from matplotlib.colors import Normalize
+from matplotlib.lines import Line2D
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.feature_selection import mutual_info_classif
@@ -23,7 +26,7 @@ class FeatureAnalysis:
         #self.plot_projection(self.compute_lda(), 'LDA Projection')
         # Compute and plot t-SNE projection
         print('t-SNE')
-        self.plot_projection(self.compute_tsne(), 't-SNE Projection')
+        #self.plot_projection(self.compute_tsne(), 't-SNE Projection')
         # Compute and plot UMAP projection
         print('UMAP')
         self.plot_projection(self.compute_umap(), 'UMAP Projection')
@@ -70,7 +73,7 @@ class FeatureAnalysis:
         test = self._data.sample(n=10000, random_state=42)
         return TSNE(n_components=n_components, perplexity=perplexity, learning_rate=learning_rate, n_iter=n_iter).fit_transform(test), test
 
-    def compute_umap(self, n_components=2, n_neighbors=20, min_dist=0.4, metric='euclidean'):
+    def compute_umap(self, n_components=2, n_neighbors=10, min_dist=0.5, metric='euclidean'):
         """
         Compute Uniform Manifold Approximation and Projection (UMAP) on the dataset.
 
@@ -83,7 +86,8 @@ class FeatureAnalysis:
         Returns:
         - umap_projection: The projected data using UMAP.
         """
-        test = self._data.sample(n=10000, random_state=42)
+        #test = self._data.sample(n=10000, random_state=42)
+        test = self._data
         return umap.UMAP(n_components=n_components, n_neighbors=n_neighbors, min_dist=min_dist,
                          metric=metric).fit_transform(test), test
 
@@ -110,10 +114,29 @@ class FeatureAnalysis:
         """
         plt.figure(figsize=(8, 6))
         plt.scatter(projection[0][:, 0], projection[0][:, 1], c=self._targets.loc[projection[1].index], alpha=0.5)
+
+        classes = sorted(self._targets.unique())
+        total_classes = len(classes)
+
+        norm = Normalize(vmin=0, vmax=total_classes - 1)
+        sm = cm.ScalarMappable(cmap='viridis', norm=norm)
+        sm.set_array([])
+
+        legend_colors = [sm.to_rgba(i) for i in range(total_classes)]
+
+        legend_elements = [Line2D([0], [0], marker='o', color='w', label=class_,
+                                  markerfacecolor=legend_colors[i])
+                           for i, class_ in enumerate(classes)]
+
+        legend1 = plt.legend(handles=legend_elements, title="Classes")
+
+        plt.gca().add_artist(legend1)
+
         plt.title(title)
         plt.xlabel('Component 1')
         plt.ylabel('Component 2')
         plt.grid(True)
+        plt.savefig(title + ".png", dpi=300, bbox_inches='tight')
         plt.show()
 
     def relevant_feature_identification(self, num_features=7):
@@ -149,4 +172,23 @@ class FeatureAnalysis:
 
         except ValueError as ve:
             print("Error:", ve)
+
+    def select_features_mrmr(self, k=5):
+        """
+        Select features using mRMR (minimum Redundancy Maximum Relevance).
+
+        Parameters:
+        - k (int): The number of features to select. Default is 5.
+
+        Returns:
+        - List: The selected features as a list.
+        """
+
+        data = self.data_loader.data_train.select_dtypes(include=['number'])
+        # Return the selected features
+        selected_features = mrmr_classif(X=data, y=self.data_loader.labels_train, K=k)
+
+        print("Selected features (mRMR):", selected_features)
+
+        return selected_features
 
