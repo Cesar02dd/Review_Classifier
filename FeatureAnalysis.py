@@ -20,10 +20,10 @@ class FeatureAnalysis:
     def perform_feature_analysis(self):
         # Compute and plot PCA projection
         print('PCA')
-        #self.plot_projection(self.compute_pca(), 'PCA Projection')
+        self.plot_projection(self.compute_pca(), 'PCA Projection')
         # Compute and plot LDA projection
         print('LDA')
-        #self.plot_projection(self.compute_lda(), 'LDA Projection')
+        self.plot_projection(self.compute_lda(), 'LDA Projection')
         # Compute and plot t-SNE projection
         print('t-SNE')
         #self.plot_projection(self.compute_tsne(), 't-SNE Projection')
