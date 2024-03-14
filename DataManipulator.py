@@ -13,6 +13,7 @@ class DataManipulator(DataLoader):
 
     def drop_columns(self):
         try:
+            # self.dataframe = self.dataframe.drop(columns=['Id_Hotel_Rating', 'Additional_Number_of_Scoring'])
             self.data = self.data.drop(columns=['Id_Hotel_Rating', 'Additional_Number_of_Scoring'])
             self.data_test = self.data_test.drop(columns=['Id_Hotel_Rating', 'Additional_Number_of_Scoring'])
             self.data_train = self.data_train.drop(columns=['Id_Hotel_Rating', 'Additional_Number_of_Scoring'])

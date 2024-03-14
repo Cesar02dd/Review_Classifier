@@ -13,6 +13,7 @@ class DataLoader:
         self.test_size = test_size
         self.state = state
 
+        self.dataframe = None
         self.data = None
         self.labels = None
         self.data_train = None
@@ -29,7 +30,7 @@ class DataLoader:
             warnings.simplefilter(action='ignore', category=FutureWarning)
 
             # Load the Dataset
-            df = pd.read_csv(self.filepath, delimiter=',')
+            df = pd.read_csv(self.filepath)
             self.dataframe = df
 
             # Split the data into features and labels

@@ -11,6 +11,7 @@ import seaborn as sns
 class PreVisualization:
     def __init__(self, data_loader):
         self.data_loader = data_loader
+        self.data_loader.dataframe.dropna(inplace=True)
 
     def perform_pre_visualization(self):
         self.numpy_statistics()
@@ -20,8 +21,10 @@ class PreVisualization:
     def numpy_statistics(self):
         # Select numerical columns
         numerical_columns = self.data_loader.dataframe.select_dtypes(include=['number'])
+        print(numerical_columns.columns)
 
-        arr = numerical_columns.to_numpy()
+        arr = numerical_columns.iloc[:, 2:].to_numpy()
+        #print(np.mean(arr[:, 6]))
 
         print("\nSummary Statistics with NumPy:")
 
