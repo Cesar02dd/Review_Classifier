@@ -8,6 +8,7 @@ from EDA import EDA
 from FeatureAnalysisAndGenerator import FeatureAnalysisAndGenerator
 from HypothesisTesting import HypothesisTesting
 from PreVisualization import PreVisualization
+from SupervisedLearning import SupervisedLearning
 
 if __name__ == "__main__":
 
@@ -18,7 +19,7 @@ if __name__ == "__main__":
 
     pre_visualization = PreVisualization(data_loader)
 
-    pre_visualization.perform_pre_visualization()
+    #pre_visualization.perform_pre_visualization()
 
     # Access the data and labels attributes
     print("\n\nBefore data preprocessing")
@@ -56,17 +57,17 @@ if __name__ == "__main__":
     # EDA
 
     eda = EDA(data_loader)
-    eda.perform_eda()
+    #eda.perform_eda()
 
     data_visualization = DataVisualization(data_loader)
-    data_visualization.perform_visualization()
+    #data_visualization.perform_visualization()
 
     # Feature Analysis
 
     feature_analysis = FeatureAnalysisAndGenerator(data_loader)
 
     # Perform Analysis
-    feature_analysis.perform_feature_analysis()
+    #feature_analysis.perform_feature_analysis()
 
     # Generate new features
     feature_analysis.generate_features()
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     relevant_features_mrmr = feature_analysis.select_features_mrmr(len(columns))
 
     # Modified data sample visualization
-    data_visualization.plot_boxplot()
+    #data_visualization.plot_boxplot()
 
     # Serialize data_loader object to save a copy of the cleaned data with new features
     with open('data_loader_with_new_features.pkl', 'wb') as f:
@@ -92,6 +93,11 @@ if __name__ == "__main__":
     print("Testing labels shape:", data_loader_loaded.labels_test.shape)
 
     hypothesis_tester = HypothesisTesting(data_loader)
-    hypothesis_tester.anova_results()
-    # hypothesis_tester.kruskal_wallis_results()
-    hypothesis_tester.t_test_results()
+    #hypothesis_tester.anova_results()
+    #hypothesis_tester.t_test_results()
+
+    supervised_learning = SupervisedLearning(data_loader)
+    print("Performing Supervised Learning Algorithms")
+    print("\n\nBayesian Linear Regression: ")
+    supervised_learning.bayesian_linear_regression()
+
