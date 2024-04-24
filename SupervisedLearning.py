@@ -59,7 +59,7 @@ class SupervisedLearning:
 
         # Plot the results
         print("Mean Squared Error: ", mse)
-        print("R-squared: ", mse)
+        print("R-squared: ", r2)
 
         # Plot prior distribution
         plt.figure(figsize=(15, 10))
