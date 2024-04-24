@@ -70,7 +70,7 @@ if __name__ == "__main__":
     #feature_analysis.perform_feature_analysis()
 
     # Generate new features
-    feature_analysis.generate_features()
+    feature_analysis.generate_features_dataset()
 
     # Perform relevant feature identification
     columns = data_loader.data.select_dtypes(include=['number'])
