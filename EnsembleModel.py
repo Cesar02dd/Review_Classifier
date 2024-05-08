@@ -1,8 +1,9 @@
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import VotingClassifier, GradientBoostingClassifier
+from sklearn.ensemble import VotingClassifier, GradientBoostingClassifier, RandomForestClassifier
 from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
+
 import pandas as pd
 
 class EnsembleModel:
@@ -54,4 +55,21 @@ class EnsembleModel:
         results.sort_values(by='mean_test_score', ascending=False, inplace=True)
         results.reset_index(drop=True, inplace=True)
         print(results[['param_n_estimators','param_learning_rate','param_max_depth', 'mean_test_score', 'std_test_score']].head())
+    def RandomForestClassifier(self):
+        rf = RandomForestClassifier(random_state=42)
 
+        param_grid = {
+            'n_estimators': [50, 100, 200],
+            'max_depth': [None, 10, 20],
+            'min_samples_split': [2, 5, 10]
+        }
+
+        grid_search = GridSearchCV(rf, param_grid=param_grid, scoring='roc_auc', cv=3)
+        grid_search.fit(self._data_train, self._labels_train)
+
+        print("Best Parameters Configuration: ", grid_search.best_params_)
+        results = pd.DataFrame(grid_search.cv_results_)
+        results.sort_values(by='mean_test_score', ascending=False, inplace=True)
+        results.reset_index(drop=True, inplace=True)
+        print(results[['param_n_estimators', 'param_max_depth', 'param_min_samples_split', 'mean_test_score',
+                       'std_test_score']].head())
