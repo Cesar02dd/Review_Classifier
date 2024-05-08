@@ -1,7 +1,8 @@
 import itertools
 
 from scipy.stats import kruskal, f_oneway, ttest_ind
-
+from catboost import  CatBoostClassifier
+from sklearn.metrics import accuracy_score
 
 class HypothesisTesting:
     def __init__(self, data_loader):
@@ -88,3 +89,19 @@ class HypothesisTesting:
                 data_class2 = self._data.loc[self.data_loader.labels_train == class2, feature]
                 t_statistic, p_value = ttest_ind(data_class1, data_class2)
                 print('Significant' if p_value < 0.05 else 'Not Significant')
+
+    def extra(self):
+
+
+        categories = ['', '']
+        catboost = CatBoostClassifier(task_type='CPU', iterations=120, learning_rate=0.1, depth=4, random_state = 5, eval_metric="Accuracy")
+
+        catboost.fit(self._data_train, self._labels_train, cat_features=categories, plot=True, eval_set=(self._data_test, self._labels_test))
+
+        predictions_cat = catboost.predict(self._data_test)
+
+        # Accuracy
+        accuracy_catboost = accuracy_score(self._labels_test, predictions_cat)
+
+        # Print the Accuracy
+        print("\n Accuracy =", (accuracy_catboost * 100.0))

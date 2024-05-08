@@ -9,17 +9,14 @@ from FeatureAnalysisAndGenerator import FeatureAnalysisAndGenerator
 from HypothesisTesting import HypothesisTesting
 from PreVisualization import PreVisualization
 from SupervisedLearning import SupervisedLearning
+from EnsembleModel import EnsembleModel
 
 if __name__ == "__main__":
-
     data_loader = DataManipulator("Hotel_Reviews.csv")
     data_preprocessing = DataPreprocessing(data_loader)
 
     # First look at the data
-
     pre_visualization = PreVisualization(data_loader)
-
-    #pre_visualization.perform_pre_visualization()
 
     # Access the data and labels attributes
     print("\n\nBefore data preprocessing")
@@ -55,7 +52,6 @@ if __name__ == "__main__":
     print("Testing labels shape:", data_loader_loaded.labels_test.shape)
 
     # EDA
-
     eda = EDA(data_loader)
     #eda.perform_eda()
 
@@ -63,7 +59,6 @@ if __name__ == "__main__":
     #data_visualization.perform_visualization()
 
     # Feature Analysis
-
     feature_analysis = FeatureAnalysisAndGenerator(data_loader)
 
     # Perform Analysis
@@ -92,12 +87,28 @@ if __name__ == "__main__":
     print("Testing data shape:", data_loader_loaded.data_test.shape)
     print("Testing labels shape:", data_loader_loaded.labels_test.shape)
 
+    # Hypothesis Testing
     hypothesis_tester = HypothesisTesting(data_loader)
     #hypothesis_tester.anova_results()
     #hypothesis_tester.t_test_results()
 
-    supervised_learning = SupervisedLearning(data_loader)
-    print("Performing Supervised Learning Algorithms")
-    print("\n\nBayesian Linear Regression: ")
-    supervised_learning.bayesian_linear_regression()
+    # Ensemble Model
+    ensemble_model = EnsembleModel(data_loader)
 
+    # Ensemble Model
+    print("\n\nPerforming Ensemble Learning Algorithms")
+
+    print("\nVoting Classifier:")
+    ensemble_model.VotingClassifier()
+
+    # print("\nGradient Boosting Classifier:")
+    # ensemble_model.GradientBoostingClassifier()
+
+    # print("\nRandom Forest Classifier:")
+    # ensemble_model.RandomForestClassifier()
+
+    # Supervised Learning
+    # supervised_learning = SupervisedLearning(data_loader)
+    # print("Performing Supervised Learning Algorithms")
+    # print("\n\nBayesian Linear Regression: ")
+    # supervised_learning.bayesian_linear_regression()
