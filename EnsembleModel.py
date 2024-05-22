@@ -68,7 +68,7 @@ class EnsembleModel:
         grid_search = GridSearchCV(rf, param_grid=param_grid, scoring='accuracy', cv=3)
         grid_search.fit(self._data_train, self._labels_train)
 
-        print("Best Parameters Configuration: ", grid_search.best_params_)
+        print("Best Parameters Configuration:", grid_search.best_params_)
         results = pd.DataFrame(grid_search.cv_results_)
         results.sort_values(by='mean_test_score', ascending=False, inplace=True)
         results.reset_index(drop=True, inplace=True)
