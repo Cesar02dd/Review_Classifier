@@ -55,6 +55,7 @@ class EnsembleModel:
         results.sort_values(by='mean_test_score', ascending=False, inplace=True)
         results.reset_index(drop=True, inplace=True)
         print(results[['param_n_estimators','param_learning_rate','param_max_depth', 'mean_test_score', 'std_test_score']].head())
+
     def RandomForestClassifier(self):
         rf = RandomForestClassifier(random_state=42)
 
@@ -64,7 +65,7 @@ class EnsembleModel:
             'min_samples_split': [2, 5, 10]
         }
 
-        grid_search = GridSearchCV(rf, param_grid=param_grid, scoring='roc_auc', cv=3)
+        grid_search = GridSearchCV(rf, param_grid=param_grid, scoring='accuracy', cv=3)
         grid_search.fit(self._data_train, self._labels_train)
 
         print("Best Parameters Configuration: ", grid_search.best_params_)
