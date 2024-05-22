@@ -3,7 +3,7 @@ import warnings
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-
+import matplotlib.pyplot as plt
 
 class DataLoader:
 
@@ -61,11 +61,11 @@ class DataLoader:
             feature_to_bin = 'Reviewer_Score'
 
             # Define the number of bins (or bin edges)
-            bins_reviewer_score = [0, 4, 7, 10]
+            bins_reviewer_score = [0, 8.5, 10]
 
             # Perform binning using pandas
             self.labels['Reviewer_Score_bin'] = pd.cut(self.labels[feature_to_bin], bins=bins_reviewer_score,
-                                                        labels=['Mau', 'Neutral', 'Bom'])
+                                                        labels=['Mau', 'Bom'])
 
             # Create an instance of LabelEncoder
             label_encoder = LabelEncoder()
@@ -73,6 +73,19 @@ class DataLoader:
             # Encode the 'reviewer_score_bin' column
             self.labels['Reviewer_Score_bin_encoded'] = label_encoder.fit_transform(
                 self.labels['Reviewer_Score_bin'])
+
+            # Plot do gráfico de barras
+            plt.figure(figsize=(8, 6))
+            counts = self.labels['Reviewer_Score_bin_encoded'].value_counts().sort_index()
+            label_map = {0: 'Bom', 1: 'Mau'}
+            index_labels = [label_map[idx] for idx in counts.index]
+            counts.plot(kind='bar', color='skyblue')
+            plt.title('Distribuição das Qualificações Y1')
+            plt.xlabel('Qualificação')
+            plt.ylabel('Número de Instâncias')
+            plt.xticks(range(len(index_labels)), index_labels, rotation=0)
+            plt.show()
+
 
             # Display the dataset after binning
             print('Dataset after binning score reviewer: \n', self.labels[['Reviewer_Score', 'Reviewer_Score_bin', 'Reviewer_Score_bin_encoded']])
