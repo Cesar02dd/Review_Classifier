@@ -106,6 +106,7 @@ class DeepLearning:
         plt.show()
 
     def rnn_3(self):
+
         VOCAB_SIZE = 10000
 
         encoder_positive = TextVectorization(max_tokens=VOCAB_SIZE, output_sequence_length=None, standardize=None)
