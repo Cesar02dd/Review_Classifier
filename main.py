@@ -11,6 +11,7 @@ from KNN import KNN
 from PreVisualization import PreVisualization
 from SupervisedLearning import SupervisedLearning
 from EnsembleModel import EnsembleModel
+from Clustering import Clustering
 
 if __name__ == "__main__":
 
@@ -120,8 +121,17 @@ if __name__ == "__main__":
     # print("\nGradient Boosting Classifier:")
     # ensemble_model.GradientBoostingClassifier()
 
-    print("\nRandom Forest Classifier:")
-    ensemble_model.RandomForestClassifier()
+    # print("\nRandom Forest Classifier:")
+    # ensemble_model.RandomForestClassifier()
+
+    # KMeans Clustering
+    preprocessed_data_train = data_loader.data_train
+    preprocessed_data_test = data_loader.data_test
+
+    # Clustering
+    clustering_model = Clustering()
+    kmeans_model = clustering_model.KMeansClustering(preprocessed_data_train, preprocessed_data_test, n_clusters=2)
+    print(f"Cluster centers:\n{kmeans_model.cluster_centers_}")
 
     # Supervised Learning
     # supervised_learning = SupervisedLearning(data_loader)
