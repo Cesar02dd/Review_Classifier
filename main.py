@@ -97,8 +97,9 @@ if __name__ == "__main__":
     ensemble_model = EnsembleModel(data_loader)
     #ensemble_model.VotingClassifier()
     #ensemble_model.GradientBoostingClassifier()
-    ensemble_model.RandomForestClassifier()
-
+    #ensemble_model.RandomForestClassifier()
+    #ensemble_model.Resultados()
+    ensemble_model.Resultados2()
 
     # Ensemble Model
     print("\n\nPerforming Ensemble Learning Algorithms")

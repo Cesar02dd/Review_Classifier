@@ -1,3 +1,5 @@
+import pickle
+
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -24,6 +26,16 @@ class SupervisedLearning:
         dt = DecisionTreeClassifier(max_depth=4, min_samples_split=2).fit(self._data_train, self._labels_train)
         rf = RandomForestClassifier(max_depth=9, min_samples_split=2).fit(self._data_train, self._labels_train)
         abc = AdaBoostClassifier(n_estimators=10, learning_rate=0.2).fit(self._data_train, self._labels_train)
+
+        # Save the models to files using pickle
+        with open('Models/decision_tree_model.pkl', 'wb') as dt_file:
+            pickle.dump(dt, dt_file)
+
+        with open('Models/random_forest_model.pkl', 'wb') as rf_file:
+            pickle.dump(rf, rf_file)
+
+        with open('Models/adaboost_model.pkl', 'wb') as abc_file:
+            pickle.dump(abc, abc_file)
 
         # Prediction
         prediction_decision_tree = dt.predict(self._data_test)
@@ -191,6 +203,11 @@ class SupervisedLearning:
         mlp = MLPClassifier(solver='adam', hidden_layer_sizes=(5, 2), max_iter=20, activation='relu')
         mlp.fit(self._data_train, self._labels_train)
 
+        # Save the models to files using pickle
+        with open('Models/MLPClassifier.pkl', 'wb') as dt_file:
+            pickle.dump(mlp, dt_file)
+
+
         # Prediction
         prediction_mlp = mlp.predict(self._data_test)
 
@@ -226,6 +243,13 @@ class SupervisedLearning:
         oneVsOne = OneVsOneClassifier(LinearSVC(dual="auto", random_state=0))
         oneVsOne.fit(self._data_train, self._labels_train)
 
+        # Save the models to files using pickle
+        with open('Models/oneVsRest.pkl', 'wb') as dt_file:
+            pickle.dump(oneVsRest, dt_file)
+
+        with open('Models/oneVsOne.pkl', 'wb') as dt_file:
+            pickle.dump(oneVsOne, dt_file)
+
         # Prediction with Cross Validation
         prediction_oneVsRest = oneVsOne.predict(self._data_test)
         prediction_oneVsOne = oneVsOne.predict(self._data_test)
@@ -250,6 +274,11 @@ class SupervisedLearning:
 
         xgb = XGBClassifier(max_depth=2, learning_rate=0.05, n_estimators=5, objective='binary:logistic', random_state=0).fit(self._data_train, self._labels_train)
 
+        # Save the models to files using pickle
+        with open('Models/XGBClassifier.pkl', 'wb') as dt_file:
+            pickle.dump(xgb, dt_file)
+
+
         # Prediction
         prediction_xgb = xgb.predict(self._data_test)
 
@@ -263,8 +292,12 @@ class SupervisedLearning:
         print("\nXGBC lassifier:")
         print("\n  Accuracy =", accuracy_xgb, "| Precision =", precision_xgb)
 
+
+    # Está função faz um gráfico de barras com base nos resultados extraidos nos modelos:
+    # 'MLP Classifier', 'OneVsRest Classifier','OneVsOne Classifier', 'XGBClassifier'
+
     def Resultados(self):
-        # Resultados obtidos dos classificadores
+        # Resultados obtidos
         results = {
             'MLP Classifier': {'accuracy': 0.5561712256604363, 'precision': 0.5378687067196164},
             'OneVsRest Classifier': {'accuracy': 0.6082061887852656, 'precision': 0.5957742570449722},
@@ -313,38 +346,40 @@ class SupervisedLearning:
 
         plt.show()
 
-#     Decision Tree:
-#
-#     Accuracy = 0.62513169703828 | Precision = 0.6337766957473617 | Recall = 0.583646556509994 | F1 = 0.5617739905224064
-#
-#     Random Forest:
-#
-#     Accuracy = 0.7352694423849846 | Precision = 0.7335195101653192 | Recall = 0.7208819297121775 | F1 = 0.7208819297121775
-#
-#     AdaBoost:
-#
-#     Accuracy = 0.7105006438521871 | Precision = 0.7061981310868695 | Recall = 0.7088153617747305 | F1 = 0.7088153617747305
-#
-#
-# MLPClassifier
-#
-#     MLP Classifier:
-#
-#     Accuracy = 0.5561712256604363 | Precision = 0.5378687067196164
-#
-# MulticlassClassifier
-#
-#     OneVsRes Classifier:
-#
-#     Accuracy = 0.6082061887852656 | Precision = 0.5957742570449722
-#
-#     OneVsOne Classifier:
-#
-#     Accuracy = 0.6082061887852656 | Precision = 0.5957742570449722
-#
-# XGBClassifier
-#
-#     XGB Classifier:
-#
-#     Accuracy = 0.5692921528075857 | Precision = 0.28464607640379286
+
+        # Resultados dos Modelos
+        #     Decision Tree:
+        #
+        #     Accuracy = 0.62513169703828 | Precision = 0.6337766957473617 | Recall = 0.583646556509994 | F1 = 0.5617739905224064
+        #
+        #     Random Forest:
+        #
+        #     Accuracy = 0.7352694423849846 | Precision = 0.7335195101653192 | Recall = 0.7208819297121775 | F1 = 0.7208819297121775
+        #
+        #     AdaBoost:
+        #
+        #     Accuracy = 0.7105006438521871 | Precision = 0.7061981310868695 | Recall = 0.7088153617747305 | F1 = 0.7088153617747305
+        #
+        #
+        # MLPClassifier
+        #
+        #     MLP Classifier:
+        #
+        #     Accuracy = 0.5561712256604363 | Precision = 0.5378687067196164
+        #
+        # MulticlassClassifier
+        #
+        #     OneVsRes Classifier:
+        #
+        #     Accuracy = 0.6082061887852656 | Precision = 0.5957742570449722
+        #
+        #     OneVsOne Classifier:
+        #
+        #     Accuracy = 0.6082061887852656 | Precision = 0.5957742570449722
+        #
+        # XGBClassifier
+        #
+        #     XGB Classifier:
+        #
+        #     Accuracy = 0.5692921528075857 | Precision = 0.28464607640379286
 
