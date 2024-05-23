@@ -1,5 +1,6 @@
 import pickle
 
+from Clustering import Clustering
 from DataCleaning import DataCleaning
 from DataManipulator import DataManipulator
 from DataPreprocessing import DataPreprocessing
@@ -110,6 +111,11 @@ if __name__ == "__main__":
 
     # Ensemble Model
     ensemble_model = EnsembleModel(data_loader)
+    #ensemble_model.VotingClassifier()
+    #ensemble_model.GradientBoostingClassifier()
+    #ensemble_model.RandomForestClassifier()
+    #ensemble_model.Resultados()
+    ensemble_model.Resultados2()
 
     # Ensemble Model
     print("\n\nPerforming Ensemble Learning Algorithms")
@@ -125,6 +131,17 @@ if __name__ == "__main__":
 
     # Supervised Learning
     # supervised_learning = SupervisedLearning(data_loader)
-    # print("Performing Supervised Learning Algorithms")
-    # print("\n\nBayesian Linear Regression: ")
-    # supervised_learning.bayesian_linear_regression()
+    # print("\nDecisionsTrees\n")
+    # supervised_learning.DecisionsTrees()
+    # print("\nMLPClassifier\n")
+    # supervised_learning.MLPClassifier()
+    # print("\nMulticlassClassifier\n")
+    # supervised_learning.MulticlassClassifier()
+    # print("\nXGBClassifier\n")
+    # supervised_learning.XGBClassifier()
+    #supervised_learning.Resultados()
+
+
+
+    # dbscan = Clustering(data_loader)
+    # dbscan.dbscan()
