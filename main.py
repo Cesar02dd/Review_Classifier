@@ -5,6 +5,7 @@ from DataCleaning import DataCleaning
 from DataManipulator import DataManipulator
 from DataPreprocessing import DataPreprocessing
 from DataVisualization import DataVisualization
+from DeepLearning import DeepLearning
 from EDA import EDA
 from FeatureAnalysisAndGenerator import FeatureAnalysisAndGenerator
 from HypothesisTesting import HypothesisTesting
@@ -95,19 +96,19 @@ if __name__ == "__main__":
     #hypothesis_tester.anova_results()
     #hypothesis_tester.t_test_results()
 
-    # knn = KNN(data_loader)
-    # print("Performing kNN")
-    # knn.knn_compare()
+    knn = KNN(data_loader)
+    print("Performing kNN")
+    #knn.knn_compare()
 
-    # supervised_learning = SupervisedLearning(data_loader)
-    # print("Performing Supervised Learning Algorithms")
-    # print("\n\nSVC: ")
+    supervised_learning = SupervisedLearning(data_loader)
+    print("Performing Supervised Learning Algorithms")
+    print("\n\nSVC: ")
     #supervised_learning.svc()
 
-    # print("\n\nDeep Learning Model")
-    # deep_learning = DeepLearning(data_loader)
-    # print("\n\nRNN: ")
-    #deep_learning.rnn()
+    print("\n\nDeep Learning Model")
+    deep_learning = DeepLearning(data_loader)
+    print("\n\nRNN: ")
+    deep_learning.rnn()
 
     # Ensemble Model
     ensemble_model = EnsembleModel(data_loader)
@@ -126,8 +127,17 @@ if __name__ == "__main__":
     # print("\nGradient Boosting Classifier:")
     # ensemble_model.GradientBoostingClassifier()
 
-    print("\nRandom Forest Classifier:")
-    ensemble_model.RandomForestClassifier()
+    # print("\nRandom Forest Classifier:")
+    # ensemble_model.RandomForestClassifier()
+
+    # KMeans Clustering
+    preprocessed_data_train = data_loader.data_train
+    preprocessed_data_test = data_loader.data_test
+
+    # Clustering
+    clustering_model = Clustering()
+    kmeans_model = clustering_model.KMeansClustering(preprocessed_data_train, preprocessed_data_test, n_clusters=2)
+    print(f"Cluster centers:\n{kmeans_model.cluster_centers_}")
 
     # Supervised Learning
     # supervised_learning = SupervisedLearning(data_loader)

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import tensorflow as tf
 from sklearn.cluster import DBSCAN
+from sklearn.cluster import KMeans
 from tensorflow.keras import layers, models
 import seaborn as sns
 from itertools import combinations
@@ -19,6 +20,7 @@ class Clustering:
 
     def dbscan(self):
 
+
         # Supondo que self.data_loader já esteja definido e contém data_train, labels_train, data_test, labels_test
         cols = ['Average_Score', 'Review_Total_Negative_Word_Counts', 'Review_Total_Positive_Word_Counts']
         data_train = self.data_loader.data_train.loc[:, cols]
@@ -27,6 +29,15 @@ class Clustering:
         # Ajustar os parâmetros eps e min_samples
         clustering = DBSCAN(eps=2, min_samples=5).fit(data_train)
         DBSCAN_dataset = data_train.copy()
+
+
+
+        # Save the models to files using pickle
+        with open('Models/DBSCAN.pkl', 'wb') as dt_file:
+            pickle.dump(clustering, dt_file)
+
+
+
         DBSCAN_dataset['Cluster'] = clustering.labels_
 
         outliers = DBSCAN_dataset[DBSCAN_dataset['Cluster'] == -1]
@@ -54,4 +65,48 @@ class Clustering:
                     axes[i, j].axis('off')
 
         plt.tight_layout()
+        
+        # Exibe o gráfico
+        plt.show()
+
+    def KMeansClustering(self, data_train, data_test, n_clusters=3):
+        # Selecionar apenas colunas numéricas
+        numeric_data_train = data_train.select_dtypes(include=['number'])
+        numeric_data_test = data_test.select_dtypes(include=['number'])
+
+        kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+        kmeans.fit(numeric_data_train)
+
+        train_clusters = kmeans.predict(numeric_data_train)
+        test_clusters = kmeans.predict(numeric_data_test)
+
+        # Adicionar rótulos de cluster ao conjunto de dados original como um novo campo 'Clustering'
+        data_train['Clustering'] = train_clusters
+        data_test['Clustering'] = test_clusters
+
+        print(f"Cluster centers:\n{kmeans.cluster_centers_}")
+        print(f"Train data cluster distribution:\n{pd.Series(train_clusters).value_counts()}")
+        print(f"Test data cluster distribution:\n{pd.Series(test_clusters).value_counts()}")
+
+        self._plot_clusters(numeric_data_train, train_clusters)
+
+        return kmeans
+
+    def _plot_clusters(self, data, clusters):
+        # Reduzir os dados a três dimensões para plotagem 3D
+        if data.shape[1] > 3:
+            data = data.iloc[:, :3]
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        scatter = ax.scatter(data.iloc[:, 0], data.iloc[:, 1], data.iloc[:, 2], c=clusters, cmap='viridis')
+        legend1 = ax.legend(*scatter.legend_elements(), title="Clusters")
+        ax.add_artist(legend1)
+
+        ax.set_xlabel(data.columns[0])
+        ax.set_ylabel(data.columns[1])
+        ax.set_zlabel(data.columns[2])
+
+        plt.title('K-means Clustering')
         plt.show()

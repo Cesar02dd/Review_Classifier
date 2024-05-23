@@ -61,7 +61,7 @@ class DataLoader:
             feature_to_bin = 'Reviewer_Score'
 
             # Define the number of bins (or bin edges)
-            bins_reviewer_score = [0, 8.5, 10]
+            bins_reviewer_score = [0, 5, 10]
 
             # Perform binning using pandas
             self.labels['Reviewer_Score_bin'] = pd.cut(self.labels[feature_to_bin], bins=bins_reviewer_score,
