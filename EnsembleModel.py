@@ -112,7 +112,7 @@ class EnsembleModel:
             'min_samples_split': [2, 5, 10]
         }
 
-        grid_search = GridSearchCV(rf, param_grid=param_grid, scoring='roc_auc', cv=3)
+        grid_search = GridSearchCV(rf, param_grid=param_grid, scoring='accuracy', cv=3)
         grid_search.fit(self._data_train, self._labels_train)
 
         # Save the models to files using pickle
@@ -120,6 +120,7 @@ class EnsembleModel:
             pickle.dump(grid_search, dt_file)
 
         print("Best Parameters Configuration: ", grid_search.best_params_)
+
         results = pd.DataFrame(grid_search.cv_results_)
         results.sort_values(by='mean_test_score', ascending=False, inplace=True)
         results.reset_index(drop=True, inplace=True)
@@ -303,3 +304,4 @@ class EnsembleModel:
         # weighted avg       0.41      0.49      0.42      5000
         #
         # Cross-Validation Accuracy: 0.72 (+/- 0.01) [Ensemble]
+
