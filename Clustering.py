@@ -19,7 +19,6 @@ class Clustering:
         self._labels_test = self.data_loader.labels_test
 
     def dbscan(self):
-
         # Lê o arquivo CSV contendo as avaliações de hotéis
         df = pd.read_csv('Hotel_Reviews.csv')
 
