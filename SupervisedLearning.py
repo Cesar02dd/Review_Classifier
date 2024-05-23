@@ -1,3 +1,10 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pylab as pl
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.linear_model import LinearRegression
+from scipy.stats import norm
+from sklearn.svm import SVC
 
 from matplotlib import pyplot as plt
 
@@ -125,6 +132,27 @@ class SupervisedLearning:
         plt.xlabel('Iterations')
         plt.ylabel('Cost')
         plt.savefig("Images\SupLearn_MLP_LossCurve.png")
+        plt.show()
+
+    def svc(self):
+        clf = SVC(kernel='linear', C=1.0, gamma='auto')
+        clf.fit(self._data_train, self._labels_train)
+        y_pred_mean = clf.predict(self._data_test)
+        print("Mean Squared Error: " + str(clf.score(self._data_test, y_pred_mean)))
+        print("R-squared: " + str(clf))
+
+        w = clf.coef_[0]
+        print(w)
+
+        a = -w[0] / w[1]
+
+        xx = np.linspace(0, 12)
+        yy = a * xx - clf.intercept_[0] / w[1]
+
+        h0 = plt.plot(xx, yy, 'k-', label="non weighted div")
+
+        plt.scatter(self._data_train[:, 0], self._data_train[:, 1], c=self._labels_train, label="data")
+        plt.legend()
         plt.show()
 
 

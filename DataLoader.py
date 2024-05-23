@@ -1,6 +1,7 @@
 import warnings
 
 import pandas as pd
+from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
@@ -73,6 +74,17 @@ class DataLoader:
             # Encode the 'reviewer_score_bin' column
             self.labels['Reviewer_Score_bin_encoded'] = label_encoder.fit_transform(
                 self.labels['Reviewer_Score_bin'])
+
+            plt.figure(figsize=(8, 6))
+            counts = self.labels['Reviewer_Score_bin_encoded'].value_counts().sort_index()
+            label_map = {0: 'Bom', 1: 'Mau', 2: 'Neutral'}
+            index_labels = [label_map[idx] for idx in counts.index]
+            counts.plot(kind='bar', color='skyblue')
+            plt.title('Distribuição das Qualificações Y1')
+            plt.xlabel('Qualificação')
+            plt.ylabel('Número de Instâncias')
+            plt.xticks(range(len(index_labels)), index_labels, rotation=0)
+            plt.show()
 
             # Display the dataset after binning
             print('Dataset after binning score reviewer: \n', self.labels[['Reviewer_Score', 'Reviewer_Score_bin', 'Reviewer_Score_bin_encoded']])

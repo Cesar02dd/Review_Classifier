@@ -4,14 +4,17 @@ from DataCleaning import DataCleaning
 from DataManipulator import DataManipulator
 from DataPreprocessing import DataPreprocessing
 from DataVisualization import DataVisualization
+from DeepLearning import DeepLearning
 from EDA import EDA
 from FeatureAnalysisAndGenerator import FeatureAnalysisAndGenerator
 from HypothesisTesting import HypothesisTesting
+from KNN import KNN
 from PreVisualization import PreVisualization
 from SupervisedLearning import SupervisedLearning
 from EnsembleModel import EnsembleModel
 
 if __name__ == "__main__":
+
     data_loader = DataManipulator("Hotel_Reviews.csv")
     data_preprocessing = DataPreprocessing(data_loader)
 
@@ -91,6 +94,20 @@ if __name__ == "__main__":
     hypothesis_tester = HypothesisTesting(data_loader)
     #hypothesis_tester.anova_results()
     #hypothesis_tester.t_test_results()
+
+    knn = KNN(data_loader)
+    print("Performing kNN")
+    #knn.knn_compare()
+
+    supervised_learning = SupervisedLearning(data_loader)
+    print("Performing Supervised Learning Algorithms")
+    print("\n\nSVC: ")
+    #supervised_learning.svc()
+
+    print("\n\nDeep Learning Model")
+    deep_learning = DeepLearning(data_loader)
+    print("\n\nRNN: ")
+    deep_learning.rnn()
 
     # Ensemble Model
     ensemble_model = EnsembleModel(data_loader)
