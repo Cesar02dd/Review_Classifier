@@ -1,3 +1,5 @@
+import pickle
+
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import KFold, cross_val_score
@@ -53,6 +55,9 @@ class KNN:
         print("\n\nAccuracy Numpy =", numpy_accuracy)
         sklearn_accuracy = sklearn_classifier.score(self._data_test, self._labels_test)
         print("\n\nAccuracy Sklearn=", sklearn_accuracy)
+
+        with open('Models/sklearn_classifier_model.pkl', 'wb') as file:
+            pickle.dump(sklearn_classifier, file)
 
         pd.DataFrame([[numpy_accuracy, sklearn_accuracy]],
                      ['Accuracy'],

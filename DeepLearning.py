@@ -1,3 +1,4 @@
+import pickle
 import string
 import numpy as np
 import matplotlib.pyplot as plt
@@ -65,7 +66,7 @@ class DeepLearning:
 
         concatenated = Concatenate()([lstm_positive, lstm_negative])
 
-        dense1 = Dense(64, activation='relu')(concatenated)
+        dense1 = Dense(64, activation='tanh%')(concatenated)
         output = Dense(1, activation='sigmoid')(dense1)
 
         model = Model(inputs=[input_positive, input_negative], outputs=output)
@@ -90,6 +91,9 @@ class DeepLearning:
 
         print('Test Loss:', test_loss)
         print('Test Accuracy:', test_acc)
+
+        with open('Models/deeplearning_model_2classes.pkl', 'wb') as deep_file:
+            pickle.dump(model, deep_file)
 
         plt.figure(figsize=(16, 8))
         plt.subplot(1, 2, 1)
@@ -163,6 +167,9 @@ class DeepLearning:
 
         print('Test Loss:', test_loss)
         print('Test Accuracy:', test_acc)
+
+        with open('Models/deeplearning_model_3classes.pkl', 'wb') as deep_file:
+            pickle.dump(model, deep_file)
 
         plt.figure(figsize=(16, 8))
         plt.subplot(1, 2, 1)
