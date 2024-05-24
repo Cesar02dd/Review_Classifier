@@ -152,7 +152,7 @@ class FeatureAnalysis:
 
     def select_features_mrmr(self, k=5):
         """
-        Select features using mRMR (minimum Redundancy Maximum Relevance).
+        Select features  using mRMR (minimum Redundancy Maximum Relevance).
 
         Parameters:
         - k (int): The number of features to select. Default is 5.
