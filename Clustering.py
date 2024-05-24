@@ -28,8 +28,10 @@ class Clustering:
 
         labels = np.full(data_train.shape[0], -1)
 
-        # Aplica o algoritmo de clustering DBSCAN ao conjunto de treino
-        clustering = DBSCAN(eps=10, min_samples=5).fit(X_train)
+        for i in range(0, len(data_train), chunk_size):
+            chunk = data_train[i:i + chunk_size]
+            clustering = DBSCAN(eps=eps, min_samples=min_samples).fit(chunk)
+            labels[i:i + chunk_size] = clustering.labels
 
         with open('Models/DBSCAN.pkl', 'wb') as dt_file:
             pickle.dump(clustering, dt_file)
