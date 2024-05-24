@@ -1,6 +1,5 @@
 import pickle
 
-import numpy as np
 from matplotlib import pyplot as plt
 
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
@@ -232,15 +231,13 @@ class SupervisedLearning:
         plt.savefig("Images\SupLearn_MLP_LossCurve.png")
         plt.show()
 
-
     def MulticlassClassifier(self):
 
-
         # Train
-        oneVsRest = OneVsRestClassifier(LinearSVC(dual="auto", random_state=0))
+        oneVsRest = OneVsRestClassifier(LinearSVC(dual=False, random_state=0))
         oneVsRest.fit(self._data_train, self._labels_train)
 
-        oneVsOne = OneVsOneClassifier(LinearSVC(dual="auto", random_state=0))
+        oneVsOne = OneVsOneClassifier(LinearSVC(dual=False, random_state=0))
         oneVsOne.fit(self._data_train, self._labels_train)
 
         # Save the models to files using pickle
