@@ -6,9 +6,28 @@ from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
 
 class DataLoader:
+    """
+    A class responsible for loading and preprocessing data.
+
+    Attributes:
+        filepath (str): The file path of the dataset.
+        test_size (float): The proportion of the dataset to include in the test split.
+        state (int): Controls the shuffling applied to the data before applying the split.
+
+    Methods:
+        _load_data(): Loads the dataset, splits it into features and labels, and splits it into training and testing sets.
+        _encode_score(): Bins the Reviewer_Score column, encodes it, and plots the distribution.
+    """
 
     def __init__(self, filepath, test_size=0.2, state=None):
+        """
+        Initializes the DataLoader class.
 
+        Args:
+            filepath (str): The file path of the dataset.
+            test_size (float): The proportion of the dataset to include in the test split (default is 0.2).
+            state (int): Controls the shuffling applied to the data before applying the split.
+        """
         self.filepath = filepath
         self.test_size = test_size
         self.state = state
@@ -25,8 +44,11 @@ class DataLoader:
         self._load_data()
 
     def _load_data(self):
+        """
+        Loads the dataset, splits it into features and labels, and splits it into training and testing sets.
+        """
         try:
-            # Ignore
+            # Ignore FutureWarning
             warnings.simplefilter(action='ignore', category=FutureWarning)
 
             # Load the Dataset
@@ -35,7 +57,6 @@ class DataLoader:
 
             # Split the data into features and labels
             self.data = df.drop(columns=['Reviewer_Score'])
-            #self.target = df[['Reviewer_Score']]
             self.labels = df[['Reviewer_Score']].copy()
 
             self._encode_score()
@@ -56,25 +77,22 @@ class DataLoader:
             print("File not found. Please check the file path.")
 
     def _encode_score(self):
+        """
+        Bins the Reviewer_Score column, encodes it, and plots the distribution.
+        """
         try:
-            # Select Reviewer Score column
+            # Binning Reviewer Score column
             feature_to_bin = 'Reviewer_Score'
-
-            # Define the number of bins (or bin edges)
             bins_reviewer_score = [0, 8.5, 10]
 
-            # Perform binning using pandas
             self.labels['Reviewer_Score_bin'] = pd.cut(self.labels[feature_to_bin], bins=bins_reviewer_score,
                                                         labels=['Mau', 'Bom'])
 
-            # Create an instance of LabelEncoder
             label_encoder = LabelEncoder()
-
-            # Encode the 'reviewer_score_bin' column
             self.labels['Reviewer_Score_bin_encoded'] = label_encoder.fit_transform(
                 self.labels['Reviewer_Score_bin'])
 
-            # Plot do gráfico de barras
+            # Plot bar graph
             plt.figure(figsize=(8, 6))
             counts = self.labels['Reviewer_Score_bin_encoded'].value_counts().sort_index()
             label_map = {0: 'Bom', 1: 'Mau'}
@@ -86,21 +104,18 @@ class DataLoader:
             plt.xticks(range(len(index_labels)), index_labels, rotation=0)
             plt.show()
 
-
             # Display the dataset after binning
-            print('Dataset after binning score reviewer: \n', self.labels[['Reviewer_Score', 'Reviewer_Score_bin', 'Reviewer_Score_bin_encoded']])
+            print('Dataset after binning score reviewer: \n',
+                  self.labels[['Reviewer_Score', 'Reviewer_Score_bin', 'Reviewer_Score_bin_encoded']])
 
             self.labels = self.labels['Reviewer_Score_bin_encoded']
 
-            # Choose the  column for binning
+            # Binning Total_Number_of_Reviews_Reviewer_Has_Given and Total_Number_of_Reviews
             feature_to_bin2 = 'Total_Number_of_Reviews_Reviewer_Has_Given'
             feature_to_bin3 = 'Total_Number_of_Reviews'
 
-            # Define the number of bins (or bin edges)
             bins_expertise_level = [0, 5, 10, 15, 20, float('inf')]
             bins_total_reviews = [0, 2500, 5000, 7500, float('inf')]
-
-            # Perform binning using pandas
 
             reviewer_expertise_level_bin = pd.cut(self.data[feature_to_bin2],
                                                   bins=bins_expertise_level,
@@ -112,7 +127,6 @@ class DataLoader:
             label_encoder = LabelEncoder()
             label_encoder2 = LabelEncoder()
 
-            # Encode the 'reviewer_score_bin' column
             self.data['Reviewer_Expertise_Level_Encoded'] = label_encoder.fit_transform(
                 reviewer_expertise_level_bin)
 

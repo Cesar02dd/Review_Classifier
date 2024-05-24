@@ -5,6 +5,12 @@ from sklearn.model_selection import KFold, cross_val_score
 
 class KNN:
     def __init__(self, data_loader):
+        """
+        Initialize the KNN classifier.
+
+        Parameters:
+        - data_loader: An instance of DataLoader providing access to the dataset.
+        """
         self.data_loader = data_loader
         self._data_train = self.data_loader.data_train.select_dtypes(include=['number'])
         self._labels_train = self.data_loader.labels_train
@@ -12,9 +18,12 @@ class KNN:
         self._labels_test = self.data_loader.labels_test
 
     def knn(self):
-
+        """
+        Perform K-nearest neighbors classification.
+        """
         print("\nKNN:")
 
+        # Fit KNN model
         KNN = KNeighborsClassifier(n_neighbors=5, metric='minkowski', p=2).fit(self._data_train,self._labels_train)
 
         # Prediction
@@ -28,9 +37,6 @@ class KNN:
 
         # Confusion Matrix
         print("\n Confusion Matrix \n",confusion_matrix(self._labels_test, prediction_knn))
-
-        # Classification Report
-        # print(classification_report(self._labels_test, prediction_knn))
 
         # Separate data into Folds
         kfold = KFold(n_splits=10, shuffle=True, random_state=2)

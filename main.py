@@ -16,13 +16,14 @@ from Clustering import Clustering
 
 if __name__ == "__main__":
 
+    # Initializing DataManipulator object
     data_loader = DataManipulator("Hotel_Reviews.csv")
     data_preprocessing = DataPreprocessing(data_loader)
 
     # First look at the data
     pre_visualization = PreVisualization(data_loader)
 
-    # Access the data and labels attributes
+    # Accessing data and labels attributes
     print("\n\nBefore data preprocessing")
     print("Normal data shape:", data_loader.data.shape)
     print("Normal labels shape:", data_loader.labels.shape)
@@ -31,6 +32,7 @@ if __name__ == "__main__":
     print("Testing data shape:", data_loader.data_test.shape)
     print("Testing labels shape:", data_loader.labels_test.shape)
 
+    # Data cleaning
     data_cleaner = DataCleaning(data_loader)
     data_cleaner.remove_duplicates()
     data_cleaner.handle_missing_values()
@@ -65,9 +67,6 @@ if __name__ == "__main__":
     # Feature Analysis
     feature_analysis = FeatureAnalysisAndGenerator(data_loader)
 
-    # Perform Analysis
-    #feature_analysis.perform_feature_analysis()
-
     # Generate new features
     feature_analysis.generate_features_dataset()
 
@@ -75,9 +74,6 @@ if __name__ == "__main__":
     columns = data_loader.data.select_dtypes(include=['number'])
     relevant_features = feature_analysis.relevant_feature_identification(len(columns))
     relevant_features_mrmr = feature_analysis.select_features_mrmr(len(columns))
-
-    # Modified data sample visualization
-    #data_visualization.plot_boxplot()
 
     # Serialize data_loader object to save a copy of the cleaned data with new features
     with open('data_loader_with_new_features.pkl', 'wb') as f:
@@ -96,20 +92,6 @@ if __name__ == "__main__":
     #hypothesis_tester.anova_results()
     #hypothesis_tester.t_test_results()
 
-    # knn = KNN(data_loader)
-    # print("Performing kNN")
-    # knn.knn_compare()
-
-    # supervised_learning = SupervisedLearning(data_loader)
-    # print("Performing Supervised Learning Algorithms")
-    # print("\n\nSVC: ")
-    #supervised_learning.svc()
-
-    # print("\n\nDeep Learning Model")
-    # deep_learning = DeepLearning(data_loader)
-    # print("\n\nRNN: ")
-    #deep_learning.rnn()
-
     # Ensemble Model
     ensemble_model = EnsembleModel(data_loader)
     #ensemble_model.VotingClassifier()
@@ -117,18 +99,6 @@ if __name__ == "__main__":
     #ensemble_model.RandomForestClassifier()
     #ensemble_model.Resultados()
     ensemble_model.Resultados2()
-
-    # Ensemble Model
-    print("\n\nPerforming Ensemble Learning Algorithms")
-
-    # print("\nVoting Classifier:")
-    # ensemble_model.VotingClassifier()
-
-    # print("\nGradient Boosting Classifier:")
-    # ensemble_model.GradientBoostingClassifier()
-
-    # print("\nRandom Forest Classifier:")
-    # ensemble_model.RandomForestClassifier()
 
     # KMeans Clustering
     preprocessed_data_train = data_loader.data_train
