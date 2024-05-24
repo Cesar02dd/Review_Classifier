@@ -9,30 +9,39 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.feature_selection import mutual_info_classif
 from sklearn.manifold import LocallyLinearEmbedding, TSNE
 
-
 class FeatureAnalysis:
     def __init__(self, data_loader):
+        """
+        Initialize the FeatureAnalysis object.
+
+        Parameters:
+        - data_loader: An instance of DataLoader providing access to the dataset.
+        """
         self.data_loader = data_loader
 
+        # Extract numeric data and targets
         self._data = self.data_loader.data_train.select_dtypes(include=['number'])
         self._targets = self.data_loader.labels_train
 
     def perform_feature_analysis(self):
+        """
+        Perform feature analysis by computing and plotting different projections of the dataset.
+        """
         # Compute and plot PCA projection
         print('PCA')
         self.plot_projection(self.compute_pca(), 'PCA Projection')
+
         # Compute and plot LDA projection
         print('LDA')
         self.plot_projection(self.compute_lda(), 'LDA Projection')
+
         # Compute and plot t-SNE projection
         print('t-SNE')
-        #self.plot_projection(self.compute_tsne(), 't-SNE Projection')
+        # self.plot_projection(self.compute_tsne(), 't-SNE Projection')
+
         # Compute and plot UMAP projection
         print('UMAP')
         self.plot_projection(self.compute_umap(), 'UMAP Projection')
-        # Compute and plot LLE projection
-        # print('LLE')
-        # self.plot_projection(self.compute_lle(), 'LLE Projection')
 
     def compute_pca(self, n_components=2):
         """
@@ -58,21 +67,6 @@ class FeatureAnalysis:
         """
         return LinearDiscriminantAnalysis(n_components=n_components).fit_transform(self._data, self._targets), self._data
 
-    def compute_tsne(self, n_components=2, perplexity=50, learning_rate=10, n_iter=3000):
-
-        """
-        Compute t-Distributed Stochastic Neighbor Embedding (t-SNE) on the dataset.
-
-        Parameters:
-        - n_components: The number of components to embed the data into.
-        - perplexity: The perplexity parameter for t-SNE.
-
-        Returns:
-        - tsne_projection: The projected data using t-SNE.
-        """
-        test = self._data.sample(n=10000, random_state=42)
-        return TSNE(n_components=n_components, perplexity=perplexity, learning_rate=learning_rate, n_iter=n_iter).fit_transform(test), test
-
     def compute_umap(self, n_components=2, n_neighbors=10, min_dist=0.5, metric='euclidean'):
         """
         Compute Uniform Manifold Approximation and Projection (UMAP) on the dataset.
@@ -86,23 +80,9 @@ class FeatureAnalysis:
         Returns:
         - umap_projection: The projected data using UMAP.
         """
-        #test = self._data.sample(n=10000, random_state=42)
         test = self._data
         return umap.UMAP(n_components=n_components, n_neighbors=n_neighbors, min_dist=min_dist,
                          metric=metric).fit_transform(test), test
-
-    def compute_lle(self, n_components=2, n_neighbors=20):
-        """
-        Compute Locally Linear Embedding (LLE) on the dataset.
-
-        Parameters:
-        - n_components: The number of components to embed the data into.
-        - n_neighbors: The number of neighbors to consider for each point.
-
-        Returns:
-        - lle_projection: The projected data using LLE.
-        """
-        return LocallyLinearEmbedding(n_neighbors=n_neighbors, n_components=n_components).fit_transform(self._data)
 
     def plot_projection(self, projection, title):
         """
@@ -142,10 +122,7 @@ class FeatureAnalysis:
     def relevant_feature_identification(self, num_features=7):
         """
         Perform feature relevant feature identification using mutual information between each feature and the target
-        variable. Mutual information measures the amount of information obtained about one random variable through
-        another random variable. It quantifies the amount of uncertainty reduced for one variable given the knowledge
-        of another variable. In feature selection, mutual information helps identify the relevance of features with
-        respect to the target variable.
+        variable.
 
         Parameters:
             num_features (int): Number of features to select.
@@ -175,7 +152,7 @@ class FeatureAnalysis:
 
     def select_features_mrmr(self, k=5):
         """
-        Select features using mRMR (minimum Redundancy Maximum Relevance).
+        Select features  using mRMR (minimum Redundancy Maximum Relevance).
 
         Parameters:
         - k (int): The number of features to select. Default is 5.

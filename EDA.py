@@ -6,12 +6,41 @@ from sklearn.inspection import permutation_importance
 
 
 class EDA:
+    """
+    A class for performing Exploratory Data Analysis (EDA) on the dataset.
+
+    Attributes:
+        data_loader (DataLoader): An object of the DataLoader class containing the dataset.
+        _data (DataFrame): Training data containing numeric columns.
+        _labels (DataFrame): Training labels.
+
+    Methods:
+        perform_eda(): Performs EDA by displaying basic information, summary statistics,
+                       distributions, correlation heatmap, feature importance, and violin plots.
+        plot_distributions(): Plots distributions of the features.
+        plot_correlation_heatmap(): Plots a correlation heatmap between features and labels.
+        plot_feature_importance(n_estimators=5, n_repeats=2): Computes and visualizes feature importance
+                                                              using permutation importance.
+        violin_plots(): Plots violin plots for data visualization.
+    """
+
     def __init__(self, data_loader):
+        """
+        Initializes the EDA class with a DataLoader object.
+
+        Args:
+            data_loader (DataLoader): An object of the DataLoader class containing the dataset.
+        """
         self.data_loader = data_loader
         self._data = self.data_loader.data_train.select_dtypes(include=['number'])
         self._labels = self.data_loader.labels_train
 
     def perform_eda(self):
+        """
+        Performs Exploratory Data Analysis (EDA) by displaying basic information,
+        summary statistics, distributions, correlation heatmap, feature importance,
+        and violin plots.
+        """
         print("Exploratory Data Analysis (EDA) Report:")
         print("--------------------------------------")
 
@@ -93,4 +122,7 @@ class EDA:
         plt.show()
 
     def violin_plots(self):
+        """
+        Plots violin plots for data visualization.
+        """
         print("TO DO: violin_plots")

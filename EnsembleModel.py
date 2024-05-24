@@ -12,8 +12,27 @@ from sklearn.svm import SVC
 import pandas as pd
 
 class EnsembleModel:
+    """
+    A class responsible for training and evaluating ensemble machine learning models.
+
+    Attributes:
+        data_loader (DataLoader): An object of the DataLoader class containing the dataset.
+        _data_train (pd.DataFrame): Training data with numerical features.
+        _labels_train (pd.Series): Labels for the training data.
+        _data_test (pd.DataFrame): Test data with numerical features.
+        _labels_test (pd.Series): Labels for the test data.
+
+    Methods:
+        VotingClassifier(): Trains a VotingClassifier ensemble model and saves it to a file.
+        GradientBoostingClassifier(): Trains a GradientBoostingClassifier model with hyperparameter tuning and evaluates its performance.
+        RandomForestClassifier(): Trains a RandomForestClassifier model with hyperparameter tuning and evaluates its performance.
+        Resultados2(): Displays a bar chart comparing the performance metrics of different classifiers.
+    """
 
     def __init__(self, data_loader):
+        """
+        Initializes the EnsembleModel class with a DataLoader object.
+        """
         self.data_loader = data_loader
         self._data_train = self.data_loader.data_train.select_dtypes(include=['number'])
         self._labels_train = self.data_loader.labels_train
@@ -22,108 +41,152 @@ class EnsembleModel:
 
 
     def VotingClassifier(self):
-
+        """
+        Trains a VotingClassifier ensemble model using KNeighborsClassifier and SVC,
+        saves the models to files, and prints performance metrics.
+        """
+        # Select numerical features and limit the dataset to the first 5000 samples
         self._data_train = self.data_loader.data_train.select_dtypes(include=['number']).iloc[:5000]
         self._labels_train = self.data_loader.labels_train.iloc[:5000]
         self._data_test = self.data_loader.data_test.select_dtypes(include=['number']).iloc[:5000]
         self._labels_test = self.data_loader.labels_test.iloc[:5000]
 
-        kn = KNeighborsClassifier(n_neighbors=5)
-        svc = SVC(kernel='rbf', probability=True)
+        # Initialize individual classifiers
+        kn = KNeighborsClassifier(n_neighbors=5)  # K-Nearest Neighbors classifier with 5 neighbors
+        svc = SVC(kernel='rbf', probability=True)  # Support Vector Classifier with RBF kernel and probability estimates
 
-        eclf = VotingClassifier(estimators = [ ('kn', kn), ('svc', svc)],voting = 'hard')
+        # Initialize the VotingClassifier with hard voting
+        eclf = VotingClassifier(estimators=[('kn', kn), ('svc', svc)], voting='hard')
 
+        # List of classifiers for iteration
         classifiers = [('KNeighborsClassifier', kn), ('SVC', svc), ('Ensemble', eclf)]
+
+        # Iterate over each classifier
         for label, clf in classifiers:
+            # Fit the classifier on the training data
             clf.fit(self._data_train, self._labels_train)
 
-            # Save the models to files using pickle
-            with open('Models/'+label+'.pkl', 'wb') as dt_file:
+            # Save the trained model to a file using pickle
+            with open('Models/' + label + '.pkl', 'wb') as dt_file:
                 pickle.dump(clf, dt_file)
 
+            # Predict the labels for the test set
             y_pred = clf.predict(self._data_test)
 
-            scores = cross_val_score(clf, self._data_train, self._labels_train,scoring='accuracy', cv=5)
+            # Compute cross-validation accuracy
+            scores = cross_val_score(clf, self._data_train, self._labels_train, scoring='accuracy', cv=5)
             print("Accuracy: %0.2f (+/- %0.2f) [%s]" % (scores.mean(), scores.std(), label))
 
-            # Calcula a precisão macro
+            # Calculate macro precision
             precision = precision_score(self._labels_test, y_pred, average='macro')
             print("Macro Precision: %0.2f [%s]" % (precision, label))
 
-            # Imprime o relatório de classificação
+            # Print classification report
             print("Classification Report [%s]:\n%s" % (label, classification_report(self._labels_test, y_pred, zero_division=1)))
 
-            # Cross-validation scores
+            # Compute cross-validation accuracy again (repeated for clarity, though redundant)
             scores = cross_val_score(clf, self._data_train, self._labels_train, scoring='accuracy', cv=5)
             print("Cross-Validation Accuracy: %0.2f (+/- %0.2f) [%s]\n" % (scores.mean(), scores.std(), label))
 
 
-
     def GradientBoostingClassifier(self):
-
+        """
+        Trains a GradientBoostingClassifier model with hyperparameter tuning using GridSearchCV,
+        saves the best model to a file, and prints performance metrics.
+        """
+        # Initialize the GradientBoostingClassifier with a fixed random state for reproducibility
         gb = GradientBoostingClassifier(random_state=0)
 
-        param_grid = dict (
-            n_estimators = [5,7,9],
-            learning_rate = [0.05, 0.1, 0.2],
-            max_depth = [1, 3]
+        # Define the parameter grid to search over
+        param_grid = dict(
+            n_estimators=[5, 7, 9],           # Number of boosting stages
+            learning_rate=[0.05, 0.1, 0.2],   # Learning rate shrinks the contribution of each tree
+            max_depth=[1, 3]                  # Maximum depth of the individual regression estimators
         )
 
+        # Print the total number of parameter combinations
         print("Numero de Combinações:", len(param_grid['n_estimators']) * len(param_grid['learning_rate']) * len(param_grid['max_depth']))
 
+        # Initialize GridSearchCV to perform hyperparameter tuning
         grid_search = GridSearchCV(gb, param_grid=param_grid, scoring='roc_auc', cv=3)
 
+        # Fit the model on the training data
         grid_search.fit(self._data_train, self._labels_train)
 
-        # Save the models to files using pickle
+        # Save the best model to a file using pickle
         with open('Models/GradientBoostingClassifier.pkl', 'wb') as dt_file:
             pickle.dump(grid_search, dt_file)
 
+        # Print the best parameters found by GridSearchCV
         print("Best Parameters Configuration: ", grid_search.best_params_)
-        # Best Parameters Configuration:  {'learning_rate': 0.05, 'max_depth': 1, 'n_estimators': 5}
 
+        # Convert cross-validation results to a DataFrame
         results = pd.DataFrame(grid_search.cv_results_)
+
+        # Sort the results by the mean test score in descending order
         results.sort_values(by='mean_test_score', ascending=False, inplace=True)
+
+        # Reset the index of the DataFrame
         results.reset_index(drop=True, inplace=True)
-        print(results[['param_n_estimators','param_learning_rate','param_max_depth', 'mean_test_score', 'std_test_score']].head())
-        # Pega o melhor modelo
+
+        # Print the top results including parameter settings and test scores
+        print(results[['param_n_estimators', 'param_learning_rate', 'param_max_depth', 'mean_test_score', 'std_test_score']].head())
+
+        # Get the best model from the grid search
         best_model = grid_search.best_estimator_
 
-        # Faz as previsões no conjunto de teste
+        # Make predictions on the test set
         y_pred = best_model.predict(self._data_test)
 
-        # Calcula a acurácia
+        # Calculate accuracy
         accuracy = accuracy_score(self._labels_test, y_pred)
         print("Accuracy: ", accuracy)
 
-        # Calcula a precisão
-        precision = precision_score(self._labels_test, y_pred,average='binary')
+        # Calculate precision
+        precision = precision_score(self._labels_test, y_pred, average='binary')
         print("Precision: ", precision)
 
-        # Para uma visão mais completa, você pode imprimir o relatório de classificação
+        # Print the classification report for a detailed performance analysis
         print("Classification Report:\n", classification_report(self._labels_test, y_pred))
 
     def RandomForestClassifier(self):
+        """
+        Trains a RandomForestClassifier model with hyperparameter tuning using GridSearchCV,
+        saves the best model to a file, and prints the best parameters and cross-validation results.
+        """
+        # Initialize the RandomForestClassifier with a fixed random state for reproducibility
         rf = RandomForestClassifier(random_state=42)
 
+        # Define the parameter grid to search over
         param_grid = {
-            'n_estimators': [50, 100, 200],
-            'max_depth': [None, 10, 20],
-            'min_samples_split': [2, 5, 10]
+            'n_estimators': [50, 100, 200],       # Number of trees in the forest
+            'max_depth': [None, 10, 20],          # Maximum depth of the trees
+            'min_samples_split': [2, 5, 10]       # Minimum number of samples required to split an internal node
         }
 
+        # Initialize GridSearchCV to perform hyperparameter tuning
         grid_search = GridSearchCV(rf, param_grid=param_grid, scoring='accuracy', cv=3)
+
+        # Fit the model on the training data
         grid_search.fit(self._data_train, self._labels_train)
 
-        # Save the models to files using pickle
+        # Save the best model to a file using pickle
         with open('Models/RandomForestClassifier.pkl', 'wb') as dt_file:
             pickle.dump(grid_search, dt_file)
 
+        # Print the best parameters found by GridSearchCV
         print("Best Parameters Configuration: ", grid_search.best_params_)
 
+        # Convert cross-validation results to a DataFrame
         results = pd.DataFrame(grid_search.cv_results_)
+
+        # Sort the results by the mean test score in descending order
         results.sort_values(by='mean_test_score', ascending=False, inplace=True)
+
+        # Reset the index of the DataFrame
         results.reset_index(drop=True, inplace=True)
+
+        # Print the top results including parameter settings and test scores
         print(results[['param_n_estimators', 'param_max_depth', 'param_min_samples_split', 'mean_test_score',
                        'std_test_score']].head())
 
@@ -147,6 +210,7 @@ class EnsembleModel:
     # Está função faz um gráfico de barras com base nos resultados extraidos nos modelos:
     # 'GradientBoostingClassifier', 'RandomForestClassifier'
     def Resultados(self):
+
         # Resultados obtidos dos classificadores
         results = {
             'GradientBoostingClassifier': {'accuracy': 0.7293349724856574, 'precision': 0.7481432678485865,

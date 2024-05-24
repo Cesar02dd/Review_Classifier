@@ -5,7 +5,6 @@ from DataCleaning import DataCleaning
 from DataManipulator import DataManipulator
 from DataPreprocessing import DataPreprocessing
 from DataVisualization import DataVisualization
-from DeepLearning import DeepLearning
 from EDA import EDA
 from FeatureAnalysisAndGenerator import FeatureAnalysisAndGenerator
 from HypothesisTesting import HypothesisTesting
@@ -13,16 +12,18 @@ from KNN import KNN
 from PreVisualization import PreVisualization
 from SupervisedLearning import SupervisedLearning
 from EnsembleModel import EnsembleModel
+from Clustering import Clustering
 
 if __name__ == "__main__":
 
+    # Initializing DataManipulator object
     data_loader = DataManipulator("Hotel_Reviews.csv")
     data_preprocessing = DataPreprocessing(data_loader)
 
     # First look at the data
     pre_visualization = PreVisualization(data_loader)
 
-    # Access the data and labels attributes
+    # Accessing data and labels attributes
     print("\n\nBefore data preprocessing")
     print("Normal data shape:", data_loader.data.shape)
     print("Normal labels shape:", data_loader.labels.shape)
@@ -31,6 +32,7 @@ if __name__ == "__main__":
     print("Testing data shape:", data_loader.data_test.shape)
     print("Testing labels shape:", data_loader.labels_test.shape)
 
+    # Data cleaning
     data_cleaner = DataCleaning(data_loader)
     data_cleaner.remove_duplicates()
     data_cleaner.handle_missing_values()
@@ -65,9 +67,6 @@ if __name__ == "__main__":
     # Feature Analysis
     feature_analysis = FeatureAnalysisAndGenerator(data_loader)
 
-    # Perform Analysis
-    #feature_analysis.perform_feature_analysis()
-
     # Generate new features
     feature_analysis.generate_features_dataset()
 
@@ -75,9 +74,6 @@ if __name__ == "__main__":
     columns = data_loader.data.select_dtypes(include=['number'])
     relevant_features = feature_analysis.relevant_feature_identification(len(columns))
     relevant_features_mrmr = feature_analysis.select_features_mrmr(len(columns))
-
-    # Modified data sample visualization
-    #data_visualization.plot_boxplot()
 
     # Serialize data_loader object to save a copy of the cleaned data with new features
     with open('data_loader_with_new_features.pkl', 'wb') as f:
@@ -96,43 +92,36 @@ if __name__ == "__main__":
     #hypothesis_tester.anova_results()
     #hypothesis_tester.t_test_results()
 
-    knn = KNN(data_loader)
-    print("Performing kNN")
-    #knn.knn_compare()
-
-    supervised_learning = SupervisedLearning(data_loader)
-    print("Performing Supervised Learning Algorithms")
-    supervised_learning.DecisionsTrees()
-    supervised_learning.MLPClassifier()
-    supervised_learning.XGBClassifier()
-    supervised_learning.MulticlassClassifier()
-
-    print("\n\nDeep Learning Model")
-    deep_learning = DeepLearning(data_loader)
-    print("\n\nRNN: ")
-    deep_learning.rnn()
-
     # Ensemble Model
     ensemble_model = EnsembleModel(data_loader)
-    print("\n\nPerforming Ensemble Learning Algorithms")
-
-    print("\nVoting Classifier:")
-    ensemble_model.VotingClassifier()
-
-    print("\nGradient Boosting Classifier:")
-    ensemble_model.GradientBoostingClassifier()
-
-    print("\nRandom Forest Classifier:")
-    ensemble_model.RandomForestClassifier()
+    #ensemble_model.VotingClassifier()
+    #ensemble_model.GradientBoostingClassifier()
+    #ensemble_model.RandomForestClassifier()
+    #ensemble_model.Resultados()
+    ensemble_model.Resultados2()
 
     # KMeans Clustering
     preprocessed_data_train = data_loader.data_train
     preprocessed_data_test = data_loader.data_test
 
     # Clustering
-    clustering_model = Clustering(data_loader)
+    clustering_model = Clustering()
     kmeans_model = clustering_model.KMeansClustering(preprocessed_data_train, preprocessed_data_test, n_clusters=2)
     print(f"Cluster centers:\n{kmeans_model.cluster_centers_}")
 
-    clustering_model.dbscan()
+    # Supervised Learning
+    # supervised_learning = SupervisedLearning(data_loader)
+    # print("\nDecisionsTrees\n")
+    # supervised_learning.DecisionsTrees()
+    # print("\nMLPClassifier\n")
+    # supervised_learning.MLPClassifier()
+    # print("\nMulticlassClassifier\n")
+    # supervised_learning.MulticlassClassifier()
+    # print("\nXGBClassifier\n")
+    # supervised_learning.XGBClassifier()
+    #supervised_learning.Resultados()
 
+
+
+    # dbscan = Clustering(data_loader)
+    # dbscan.dbscan()
