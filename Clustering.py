@@ -19,7 +19,7 @@ class Clustering:
         self._labels_test = self.data_loader.labels_test
 
     def dbscan(self):
-        cols = ['AverageScore', 'Review_Total_Negative_Word_Counts', 'Review_Total_Positive_Word_Counts']
+        cols = ['Average_Score', 'Review_Total_Negative_Word_Counts', 'Review_Total_Positive_Word_Counts']
         data_train = self.data_loader.data_train.loc[:, cols]
 
         eps = 2
@@ -31,7 +31,7 @@ class Clustering:
         for i in range(0, len(data_train), chunk_size):
             chunk = data_train[i:i + chunk_size]
             clustering = DBSCAN(eps=eps, min_samples=min_samples).fit(chunk)
-            labels[i:i + chunk_size] = clustering.labels
+            labels[i:i + chunk_size] = clustering.labels_
 
         with open('Models/DBSCAN.pkl', 'wb') as dt_file:
             pickle.dump(clustering, dt_file)

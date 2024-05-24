@@ -102,8 +102,10 @@ if __name__ == "__main__":
 
     supervised_learning = SupervisedLearning(data_loader)
     print("Performing Supervised Learning Algorithms")
-    print("\n\nSVC: ")
-    #supervised_learning.svc()
+    supervised_learning.DecisionsTrees()
+    supervised_learning.MLPClassifier()
+    supervised_learning.XGBClassifier()
+    supervised_learning.MulticlassClassifier()
 
     print("\n\nDeep Learning Model")
     deep_learning = DeepLearning(data_loader)
@@ -112,46 +114,25 @@ if __name__ == "__main__":
 
     # Ensemble Model
     ensemble_model = EnsembleModel(data_loader)
-    #ensemble_model.VotingClassifier()
-    #ensemble_model.GradientBoostingClassifier()
-    #ensemble_model.RandomForestClassifier()
-    #ensemble_model.Resultados()
-    ensemble_model.Resultados2()
-
-    # Ensemble Model
     print("\n\nPerforming Ensemble Learning Algorithms")
 
-    # print("\nVoting Classifier:")
-    # ensemble_model.VotingClassifier()
+    print("\nVoting Classifier:")
+    ensemble_model.VotingClassifier()
 
-    # print("\nGradient Boosting Classifier:")
-    # ensemble_model.GradientBoostingClassifier()
+    print("\nGradient Boosting Classifier:")
+    ensemble_model.GradientBoostingClassifier()
 
-    # print("\nRandom Forest Classifier:")
-    # ensemble_model.RandomForestClassifier()
+    print("\nRandom Forest Classifier:")
+    ensemble_model.RandomForestClassifier()
 
     # KMeans Clustering
     preprocessed_data_train = data_loader.data_train
     preprocessed_data_test = data_loader.data_test
 
     # Clustering
-    clustering_model = Clustering()
+    clustering_model = Clustering(data_loader)
     kmeans_model = clustering_model.KMeansClustering(preprocessed_data_train, preprocessed_data_test, n_clusters=2)
     print(f"Cluster centers:\n{kmeans_model.cluster_centers_}")
 
-    # Supervised Learning
-    # supervised_learning = SupervisedLearning(data_loader)
-    # print("\nDecisionsTrees\n")
-    # supervised_learning.DecisionsTrees()
-    # print("\nMLPClassifier\n")
-    # supervised_learning.MLPClassifier()
-    # print("\nMulticlassClassifier\n")
-    # supervised_learning.MulticlassClassifier()
-    # print("\nXGBClassifier\n")
-    # supervised_learning.XGBClassifier()
-    #supervised_learning.Resultados()
+    clustering_model.dbscan()
 
-
-
-    # dbscan = Clustering(data_loader)
-    # dbscan.dbscan()
